@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="Dawn Will Tell">
+<meta property="og:description" content="A free social deduction game in a living 1950s noir harbor city. The city is the witness.">
+<meta property="og:image" content="img/harbour.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0c10'/%3E%3Ccircle cx='16' cy='18' r='8' fill='%23e9b64a'/%3E%3Crect y='18' width='32' height='14' fill='%230a0c10'/%3E%3C/svg%3E">
+<style>img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Dawn Will Tell</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Dawn Will Tell: a free-to-play social deduction game in a living 1950s noir harbor city. 4 to 12 players, proximity voice, no NPCs. The city is the witness.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Courier+Prime:wght@400;700&display=swap">
+</head>
+<body>
+<style>
+/* Layout: one dark noir scroll. Full-bleed hero with rain, then a "case file" of sections: the match clock, the evidence, the cast, the gallery, the morning paper, the studio. Single committed dark theme. */
+:root{
+  --ink:#0a0c10;        /* blue-black night */
+  --ink-2:#12151b;      /* raised surfaces */
+  --ink-3:#1c2028;      /* borders, rules */
+  --paper:#eadfc6;      /* primary text, old newsprint */
+  --paper-dim:#9d957f;  /* secondary text */
+  --amber:#e9b64a;      /* gas lamp */
+  --neon:#7fe3d8;       /* Harbour Row sign */
+  --blood:#b23a2e;      /* trial only */
+  --phase:var(--amber);
+  --display:"Limelight","Big Shoulders Display",Impact,"Arial Narrow",sans-serif;
+  --body:"Crimson Pro",Georgia,"Times New Roman",serif;
+  --mono:"Courier Prime","Courier New",Courier,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--body);font-size:19px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{text-wrap:balance;margin:0}
+.wrap{max-width:1180px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper-dim)}
+.eyebrow b{color:var(--phase);font-weight:400}
+section{padding-block:96px}
+@media (max-width:700px){section{padding-block:64px}body{font-size:18px}}
+h2.display{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,60px);line-height:1.02;letter-spacing:.01em;margin-top:14px}
+.lede{font-size:clamp(20px,2.2vw,24px);max-width:60ch;color:var(--paper);margin-top:18px}
+.lede em{color:var(--amber);font-style:italic}
+.muted{color:var(--paper-dim)}
+:focus-visible{outline:2px solid var(--neon);outline-offset:3px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:linear-gradient(to bottom,rgba(10,12,16,.92),rgba(10,12,16,.75));backdrop-filter:blur(8px);border-bottom:1px solid var(--ink-3)}
+.nav .wrap{display:flex;align-items:center;gap:24px;min-height:62px}
+.brand{font-family:var(--display);font-size:20px;letter-spacing:.06em;text-decoration:none;color:var(--paper);white-space:nowrap}
+.brand span{color:var(--amber)}
+.nav ul{list-style:none;margin:0 0 0 auto;padding:0;display:flex;gap:22px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.nav ul a{text-decoration:none;color:var(--paper-dim)}
+.nav ul a:hover{color:var(--paper)}
+@media (max-width:860px){.nav ul{display:none}}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border:1px solid var(--amber);color:var(--amber);text-decoration:none;font-family:var(--mono);font-size:14px;letter-spacing:.16em;text-transform:uppercase;background:transparent;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:var(--amber);color:var(--ink)}
+.btn.solid{background:var(--amber);color:var(--ink)}
+.btn.solid:hover{background:#f3c866}
+.btn.ghost{border-color:var(--ink-3);color:var(--paper)}
+.btn.ghost:hover{background:var(--ink-2);color:var(--paper)}
+.nav .btn{padding:9px 16px;font-size:12px}
+
+/* hero */
+.hero{position:relative;min-height:min(92vh,860px);display:grid;align-items:end;overflow:hidden;padding-block:0;isolation:isolate}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;z-index:-3;filter:saturate(.9) contrast(1.05)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none;mix-blend-mode:screen;opacity:.55}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(10,12,16,1) 0%,rgba(10,12,16,.72) 38%,rgba(10,12,16,.15) 70%,rgba(10,12,16,.45) 100%)}
+.hero .wrap{padding-block:72px 64px;width:100%}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(52px,9.5vw,138px);line-height:.92;letter-spacing:.005em;margin-top:18px;text-shadow:0 6px 40px rgba(0,0,0,.6)}
+.hero h1 .n{display:block;color:var(--paper)}
+.hero h1 .d{display:block;color:var(--amber)}
+.hero .lede{max-width:52ch;margin-top:22px}
+.cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.facts{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:30px;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim)}
+.facts span::before{content:"";display:inline-block;width:6px;height:6px;background:var(--amber);margin-right:10px;vertical-align:middle}
+
+/* ticker */
+.ticker{border-top:1px solid var(--ink-3);border-bottom:1px solid var(--ink-3);background:var(--ink-2);overflow:hidden;padding-block:12px;font-family:var(--mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--paper-dim);white-space:nowrap}
+.ticker .track{display:inline-flex;gap:0;animation:slide 48s linear infinite}
+.ticker span{padding-inline:28px}
+.ticker span::after{content:"◆";color:var(--amber);margin-left:56px;font-size:9px;vertical-align:middle}
+@keyframes slide{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker .track{animation:none}.ticker{white-space:normal}.ticker span{display:inline-block;padding-block:4px}}
+
+/* match clock */
+.clock{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:48px;align-items:center;margin-top:48px}
+@media (max-width:860px){.clock{grid-template-columns:1fr;gap:28px}}
+.phases{display:grid;gap:0;border-top:1px solid var(--ink-3)}
+.phase{display:grid;grid-template-columns:54px 1fr;gap:16px;align-items:start;text-align:left;background:none;border:0;border-bottom:1px solid var(--ink-3);color:var(--paper);padding:20px 8px;cursor:pointer;font:inherit;transition:background .2s}
+.phase:hover{background:var(--ink-2)}
+.phase .k{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--paper-dim);padding-top:7px}
+.phase h3{font-family:var(--display);font-weight:400;font-size:26px;letter-spacing:.02em;transition:color .2s}
+.phase p{margin:6px 0 0;color:var(--paper-dim);font-size:17px;max-height:0;overflow:hidden;opacity:0;transition:max-height .35s,opacity .35s}
+.phase[aria-selected="true"]{background:var(--ink-2)}
+.phase[aria-selected="true"] h3{color:var(--phase)}
+.phase[aria-selected="true"] .k{color:var(--phase)}
+.phase[aria-selected="true"] p{max-height:120px;opacity:1}
+.stage{position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;border:1px solid var(--ink-3);background:var(--ink-2)}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
+.stage img.on{opacity:1}
+.stage .tag{position:absolute;left:0;bottom:0;background:rgba(10,12,16,.82);border-top:2px solid var(--phase);padding:10px 16px;font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;transition:border-color .3s}
+.stage .time{position:absolute;right:14px;top:12px;font-family:var(--display);font-size:38px;color:var(--phase);text-shadow:0 2px 18px rgba(0,0,0,.7);transition:color .3s}
+.clock-note{margin-top:22px;font-size:17px;color:var(--paper-dim);max-width:70ch}
+
+/* evidence */
+.evidence{background:var(--ink-2);border-block:1px solid var(--ink-3)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:44px}
+.card{border:1px solid var(--ink-3);background:var(--ink);padding:26px 24px 28px;min-width:0;position:relative}
+.card .no{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--amber)}
+.card h3{font-family:var(--display);font-weight:400;font-size:25px;margin-top:12px;letter-spacing:.01em}
+.card p{margin:12px 0 0;color:var(--paper-dim);font-size:17px}
+.card .stamp{position:absolute;right:18px;top:16px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--neon);border:1px solid var(--neon);padding:3px 7px;transform:rotate(-6deg);opacity:.8}
+.rule{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px;margin-top:56px;padding-top:40px;border-top:1px solid var(--ink-3)}
+.rule div{min-width:0}
+.rule b{display:block;font-family:var(--display);font-weight:400;font-size:21px;color:var(--amber);margin-bottom:6px;letter-spacing:.01em}
+.rule p{margin:0;color:var(--paper-dim);font-size:17px}
+
+/* cast */
+.cast{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:44px}
+.role{border-top:2px solid var(--ink-3);padding-top:18px;min-width:0}
+.role.fam{border-color:var(--blood)}.role.det{border-color:var(--neon)}.role.doc{border-color:var(--amber)}.role.town{border-color:var(--paper-dim)}.role.ghost{border-color:#6c7a8a}
+.role .k{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--paper-dim)}
+.role h3{font-family:var(--display);font-weight:400;font-size:24px;margin-top:8px;letter-spacing:.01em}
+.role p{margin:10px 0 0;color:var(--paper-dim);font-size:17px}
+
+/* gallery */
+.gallery{background:var(--ink-2);border-block:1px solid var(--ink-3)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:40px}
+.grid button{border:0;padding:0;background:var(--ink);cursor:pointer;position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;border:1px solid var(--ink-3)}
+.grid button:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
+.grid img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.grid button:hover img{transform:scale(1.04)}
+.grid figcaption{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;background:linear-gradient(to top,rgba(10,12,16,.9),transparent);font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper);text-align:left}
+@media (max-width:700px){.grid{grid-template-columns:1fr 1fr}.grid button:first-child{grid-column:span 2;grid-row:span 1;aspect-ratio:16/9}}
+dialog.light{border:0;padding:0;background:transparent;max-width:min(96vw,1400px);width:auto}
+dialog.light::backdrop{background:rgba(5,6,9,.92)}
+dialog.light img{max-height:86vh;width:auto;max-width:96vw;border:1px solid var(--ink-3)}
+dialog.light .cap{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:12px 4px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim)}
+dialog.light .cap button{background:none;border:1px solid var(--ink-3);color:var(--paper);font:inherit;padding:6px 12px;cursor:pointer}
+
+/* newspaper */
+.paper{background:var(--paper);color:#1b1710;border-block:1px solid #c9bc9b;padding-block:72px}
+.sheet{max-width:980px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.masthead{text-align:center;border-bottom:3px double #1b1710;padding-bottom:14px}
+.masthead .top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid #1b1710;padding-bottom:6px;margin-bottom:10px;gap:12px;flex-wrap:wrap}
+.masthead h2{font-family:var(--display);font-weight:400;font-size:clamp(36px,7vw,76px);line-height:1;letter-spacing:.02em}
+.masthead .sub{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-top:8px}
+.headline{font-family:var(--display);font-weight:400;font-size:clamp(28px,4.6vw,52px);line-height:1.05;text-align:center;margin:28px auto 8px;max-width:20ch}
+.deck{text-align:center;font-style:italic;font-size:20px;color:#4a4132;max-width:60ch;margin-inline:auto}
+.columns{columns:3;column-gap:32px;column-rule:1px solid #b9ad8c;margin-top:30px;font-size:17px;line-height:1.5}
+.columns p{margin:0 0 14px;break-inside:avoid}
+.columns p:first-child::first-letter{font-family:var(--display);font-size:52px;float:left;line-height:.8;padding:6px 8px 0 0}
+@media (max-width:860px){.columns{columns:2}}
+@media (max-width:560px){.columns{columns:1}}
+.paper .note{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6a6050;text-align:center;margin-top:28px;border-top:1px solid #b9ad8c;padding-top:12px}
+
+/* studio + join */
+.studio .two{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;margin-top:40px;align-items:start}
+@media (max-width:860px){.studio .two{grid-template-columns:1fr;gap:36px}}
+.studio .two>div{min-width:0}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:10px 24px;font-size:17px;margin-top:26px}
+.spec dt{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-dim);padding-top:4px}
+.spec dd{margin:0}
+.join{border:1px solid var(--amber);padding:30px 28px;background:linear-gradient(180deg,rgba(233,182,74,.08),transparent)}
+.join h3{font-family:var(--display);font-weight:400;font-size:28px;letter-spacing:.01em}
+.join p{color:var(--paper-dim);font-size:17px;margin:12px 0 0}
+.mail{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:20px}
+.mail code{font-family:var(--mono);font-size:17px;color:var(--paper);background:var(--ink-2);padding:10px 14px;border:1px solid var(--ink-3);user-select:all;min-width:0;overflow-wrap:anywhere}
+.mail .ok{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--neon);min-height:1em}
+.soon{display:inline-flex;align-items:center;gap:10px;margin-top:22px;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-dim);border:1px dashed var(--ink-3);padding:10px 14px}
+.soon i{width:8px;height:8px;border-radius:50%;background:var(--paper-dim);display:inline-block}
+
+/* neon flicker on the amber word */
+@keyframes neon{0%,19%,21%,23%,80%,100%{opacity:1;text-shadow:0 0 18px rgba(233,182,74,.55),0 6px 40px rgba(0,0,0,.6)}20%,22%{opacity:.55;text-shadow:none}81%{opacity:.8}}
+.hero h1 .d{animation:neon 9s infinite}
+@media (prefers-reduced-motion:reduce){.hero h1 .d{animation:none}}
+
+/* numbers strip */
+.numbers{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0;border:1px solid var(--ink-3);margin-top:56px}
+.numbers div{padding:22px 20px;border-right:1px solid var(--ink-3);min-width:0}
+.numbers div:last-child{border-right:0}
+.numbers b{display:block;font-family:var(--display);font-weight:400;font-size:44px;line-height:1;color:var(--amber);font-variant-numeric:tabular-nums}
+.numbers span{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-dim);display:block;margin-top:8px}
+@media (max-width:700px){.numbers div:nth-child(2n){border-right:0}.numbers div{border-bottom:1px solid var(--ink-3)}}
+
+/* lineup game */
+.lineup{background:radial-gradient(ellipse at 50% 0%,rgba(233,182,74,.10),transparent 55%),var(--ink)}
+.row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;margin-top:44px;align-items:end;padding:28px 10px 0;border-bottom:3px solid var(--ink-3);position:relative}
+.row::before{content:"";position:absolute;left:0;right:0;top:0;height:100%;background:repeating-linear-gradient(90deg,transparent 0 calc(12.5% - 1px),var(--ink-3) calc(12.5% - 1px) 12.5%);opacity:.6;pointer-events:none}
+@media (max-width:700px){.row{grid-template-columns:repeat(4,minmax(0,1fr))}.row::before{background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),var(--ink-3) calc(25% - 1px) 25%)}}
+.sus{background:none;border:0;padding:0 0 14px;cursor:pointer;position:relative;color:var(--paper);font:inherit;min-width:0}
+.sus svg{width:100%;height:auto;display:block;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+.sus .who{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);margin-top:8px;display:block;opacity:0;transition:opacity .3s;min-height:2.6em}
+.sus:hover svg,.sus:focus-visible svg{transform:translateY(-6px)}
+.sus svg{transition:transform .3s}
+.row.done .sus .who{opacity:1}
+.row.done .sus[data-fam="1"] .who{color:var(--blood)}
+.row.done .sus[data-fam="1"] svg .coat{fill:#4a1d19}
+.verdict{margin-top:26px;min-height:3.2em;font-size:clamp(20px,2.4vw,26px);font-style:italic;color:var(--paper)}
+.verdict b{font-style:normal;color:var(--amber)}
+.again{margin-top:14px}
+
+/* truth timeline */
+.truth{background:var(--ink-2);border-block:1px solid var(--ink-3)}
+.tl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;margin-top:44px;align-items:start}
+@media (max-width:860px){.tl{grid-template-columns:1fr}}
+.tl>div{min-width:0}
+.log{border-left:2px solid var(--ink-3);padding-left:26px;display:grid;gap:22px;position:relative}
+.log li{list-style:none;position:relative}
+.log li::before{content:"";position:absolute;left:-33px;top:7px;width:12px;height:12px;background:var(--ink);border:2px solid var(--paper-dim);border-radius:50%}
+.log li.key::before{border-color:var(--amber);background:var(--amber);box-shadow:0 0 0 5px rgba(233,182,74,.18)}
+.log .t{font-family:var(--mono);font-size:13px;letter-spacing:.16em;color:var(--amber)}
+.log .w{display:block;font-size:18px;margin-top:4px}
+.log .w s{color:var(--paper-dim);text-decoration-color:var(--blood)}
+.log .w em{color:var(--neon);font-style:normal}
+.stampbox{border:1px solid var(--ink-3);padding:28px;background:var(--ink);position:relative}
+.stampbox .big{font-family:var(--display);font-weight:400;font-size:clamp(30px,4vw,46px);line-height:1;letter-spacing:.02em}
+.stampbox .big span{color:var(--amber)}
+.stampbox p{color:var(--paper-dim);font-size:17px;margin:14px 0 0}
+.stampbox .st{position:absolute;right:22px;top:-16px;font-family:var(--mono);font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--blood);border:2px solid var(--blood);padding:6px 12px;transform:rotate(5deg);background:var(--ink)}
+
+/* wardrobe */
+.ward{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:48px;margin-top:44px;align-items:center}
+@media (max-width:860px){.ward{grid-template-columns:1fr}}
+.ward>div{min-width:0}
+.mannequin{max-width:320px;margin-inline:auto}
+.mannequin svg{width:100%;height:auto;display:block;filter:drop-shadow(0 16px 30px rgba(0,0,0,.6))}
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:22px}
+.sw{background:var(--ink-2);border:1px solid var(--ink-3);padding:14px;cursor:pointer;color:var(--paper);font:inherit;text-align:left;display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:center;min-width:0}
+.sw i{width:28px;height:28px;border-radius:50%;display:block;border:2px solid rgba(255,255,255,.12)}
+.sw b{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:400;display:block}
+.sw small{display:block;color:var(--paper-dim);font-size:14px;margin-top:2px}
+.sw[aria-pressed="true"]{border-color:var(--amber)}
+.sw:hover{border-color:var(--paper-dim)}
+.ward .fine{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);margin-top:20px}
+
+/* faq */
+.faq{display:grid;gap:0;margin-top:40px;border-top:1px solid var(--ink-3);max-width:860px}
+.faq details{border-bottom:1px solid var(--ink-3)}
+.faq summary{cursor:pointer;list-style:none;padding:20px 8px;font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.01em;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--mono);color:var(--amber);font-size:22px;flex:none}
+.faq details[open] summary::after{content:"−"}
+.faq details p{margin:0;padding:0 8px 22px;color:var(--paper-dim);font-size:17px;max-width:65ch}
+
+footer{border-top:1px solid var(--ink-3);padding-block:36px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--paper-dim);line-height:1.8}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 32px}
+footer .brand{font-size:16px}
+</style>
+
+<nav class="nav" aria-label="Site">
+  <div class="wrap">
+    <a class="brand" href="#top">DAWN <span>WILL</span> TELL</a>
+    <ul>
+      <li><a href="#match">The match</a></li>
+      <li><a href="#city">The city</a></li>
+      <li><a href="#lineup">The lineup</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#wardrobe">Wardrobe</a></li>
+      <li><a href="#studio">Studio</a></li>
+    </ul>
+    <a class="btn" href="#join">Join the playtest</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <img class="bg" src="img/harbour.jpg" alt="Harbour Row at night: a neon sign, gas lamps and two translucent ghosts on the wet quay" width="1400" height="788">
+  <canvas id="rain" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="eyebrow">Port Sable · <b>1955</b> · 4 to 12 players · one hidden family</div>
+    <h1><span class="n">Night lies.</span><span class="d">Dawn tells.</span></h1>
+    <p class="lede">A free social deduction game in a 1950s noir harbor city. Every face on the street is a real player. <em>The city is the only witness.</em></p>
+    <div class="cta">
+      <a class="btn solid" href="#join">Join the playtest</a>
+      <a class="btn ghost" href="#gallery">See Port Sable</a>
+    </div>
+    <div class="facts"><span>Free to play</span><span>PC on Steam, mobile later</span><span>Proximity voice</span><span>Unreal Engine 5</span></div>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true"><div class="track">
+  <span>No NPCs</span><span>No phones</span><span>No cameras</span><span>No DNA</span><span>Only witnesses</span><span>The city remembers</span><span>A coat and a hat hide a face</span><span>Dead players become ghosts</span><span>Votes are cast in the open</span>
+  <span>No NPCs</span><span>No phones</span><span>No cameras</span><span>No DNA</span><span>Only witnesses</span><span>The city remembers</span><span>A coat and a hat hide a face</span><span>Dead players become ghosts</span><span>Votes are cast in the open</span>
+</div></div>
+
+<section id="match">
+  <div class="wrap">
+    <div class="eyebrow">The match · <b>about 25 minutes</b></div>
+    <h2 class="display">One town. One hidden family.<br>Until only one side is left.</h2>
+    <p class="lede">The Family knows each other. Nobody else knows anything. The cycle repeats until the last mobster hangs, or the Family outnumbers the town.</p>
+    <div class="clock">
+      <div class="phases" role="tablist" aria-label="Match phases">
+        <button class="phase" role="tab" aria-selected="true" data-img="p-day" data-color="#e9b64a" data-tag="Day · Harbour street" data-time="07:00">
+          <span class="k">I</span>
+          <span><h3>Day</h3><p>Walk the docks, trade rumours, do your job. Everyone is watching everyone.</p></span>
+        </button>
+        <button class="phase" role="tab" aria-selected="false" data-img="p-night" data-color="#7fe3d8" data-tag="Night · Rain on Cannery Street" data-time="23:00">
+          <span class="k">II</span>
+          <span><h3>Night</h3><p>The lamps go down. The Family waits for its moment. The town hides and listens.</p></span>
+        </button>
+        <button class="phase" role="tab" aria-selected="false" data-img="p-dawn" data-color="#f0c97a" data-tag="Dawn · The quay tells" data-time="05:40">
+          <span class="k">III</span>
+          <span><h3>Dawn</h3><p>A body on the quay, footprints in the wet, a torn page. Read them before the rain does.</p></span>
+        </button>
+        <button class="phase" role="tab" aria-selected="false" data-img="p-trial" data-color="#d8604f" data-tag="Trial · Town hall square" data-time="09:00">
+          <span class="k">IV</span>
+          <span><h3>Trial</h3><p>Name a suspect. Hear the defence. Vote in the open. Then the sun goes down again.</p></span>
+        </button>
+      </div>
+      <div class="stage" aria-live="polite">
+        <img id="p-day" class="on" src="img/kerb.jpg" alt="Daytime harbor street" loading="lazy" width="1400" height="788">
+        <img id="p-night" src="img/street.jpg" alt="Rainy night street under gas lamps" loading="lazy" width="1400" height="788">
+        <img id="p-dawn" src="img/harbour.jpg" alt="Harbour Row with ghosts at first light" loading="lazy" width="1400" height="788">
+        <img id="p-trial" src="img/night.jpg" alt="Lit town hall facade on a rainy square" loading="lazy" width="1400" height="788">
+        <div class="time" id="stage-time">07:00</div>
+        <div class="tag" id="stage-tag">Day · Harbour street</div>
+      </div>
+    </div>
+    <p class="clock-note">Three quiet cycles and the case goes cold. The dead stay on as ghosts.</p>
+    <div class="numbers">
+      <div><b>4–12</b><span>players per match</span></div>
+      <div><b>~25</b><span>minutes a match</span></div>
+      <div><b>14</b><span>fixed characters</span></div>
+      <div><b>0</b><span>NPCs, phones, cameras</span></div>
+      <div><b>1</b><span>hidden family</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="lineup" id="lineup">
+  <div class="wrap">
+    <div class="eyebrow">The lineup · <b>a small test</b></div>
+    <h2 class="display">Eight coats. Two of them are the Family.<br>Pick one.</h2>
+    <p class="lede">What the town sees at night, from across the square.</p>
+    <div class="row" id="row" aria-label="Eight silhouettes in coats and hats"></div>
+    <p class="verdict" id="verdict">Click a coat to accuse.</p>
+    <button class="btn ghost again" type="button" id="again" hidden>New lineup</button>
+  </div>
+</section>
+
+<section class="evidence" id="city">
+  <div class="wrap">
+    <div class="eyebrow">The city · <b>is the witness</b></div>
+    <h2 class="display">Nobody saw anything.<br>The street did.</h2>
+    <p class="lede">No NPCs, no witnesses to question. Evidence comes from the world itself, and it fades.</p>
+    <div class="cards">
+      <article class="card"><span class="stamp">Exhibit A</span><div class="no">01</div><h3>Footprints in the wet</h3><p>Tracks hold on wet stone, then wash out.</p></article>
+      <article class="card"><span class="stamp">Exhibit B</span><div class="no">02</div><h3>The morning paper</h3><p>Every dawn the Ledger prints what the city knows.</p></article>
+      <article class="card"><span class="stamp">Exhibit C</span><div class="no">03</div><h3>Ledgers and registers</h3><p>Jobs leave entries. Alibis are made of entries.</p></article>
+      <article class="card"><span class="stamp">Exhibit D</span><div class="no">04</div><h3>A shot in the dark</h3><p>Sound fades with distance. Where you stood is a fact.</p></article>
+    </div>
+    <div class="rule">
+      <div><b>A coat hides a face</b><p>At night, in rain, everyone in a trench coat is the same silhouette.</p></div>
+      <div><b>Identity is not role</b><p>Same character every match. New role every match.</p></div>
+      <div><b>The server keeps the secrets</b><p>Nothing hidden ever reaches a screen it shouldn't.</p></div>
+      <div><b>Open ballots</b><p>Everyone sees your hand go up.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cast">
+  <div class="wrap">
+    <div class="eyebrow">The cast · <b>roles dealt per match</b></div>
+    <h2 class="display">Same faces every night.<br>Never the same hand.</h2>
+    <div class="cast">
+      <div class="role fam"><div class="k">Hidden</div><h3>The Family</h3><p>Know each other. One hit a night, up close, in the dark.</p></div>
+      <div class="role det"><div class="k">Town</div><h3>The Detective</h3><p>One check a night. Then decide whom to tell.</p></div>
+      <div class="role doc"><div class="k">Town</div><h3>The Doctor</h3><p>Guard one person a night. Choose wrong and the paper prints a name.</p></div>
+      <div class="role town"><div class="k">Town</div><h3>The Townsfolk</h3><p>A job, a route, a memory and a vote.</p></div>
+      <div class="role ghost"><div class="k">After death</div><h3>The Ghosts</h3><p>They see the living. They cannot speak. They still have work.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="wrap">
+    <div class="eyebrow">Port Sable · <b>in engine</b></div>
+    <h2 class="display">A harbor city that is still being built.</h2>
+    <p class="lede muted">Unedited pre-alpha captures, Unreal Engine 5.</p>
+    <div class="grid" id="grid">
+      <button data-cap="Harbour Row at night, ghosts visible to the dead"><figure><img src="img/harbour.jpg" alt="Harbour Row at night" loading="lazy" width="1400" height="788"><figcaption>Harbour Row, night</figcaption></figure></button>
+      <button data-cap="Rain on Cannery Street"><figure><img src="img/street.jpg" alt="Rainy night street" loading="lazy" width="1400" height="788"><figcaption>Cannery Street, rain</figcaption></figure></button>
+      <button data-cap="Town hall square before the trial"><figure><img src="img/night.jpg" alt="Lit facade on a rainy square" loading="lazy" width="1400" height="788"><figcaption>Town hall square</figcaption></figure></button>
+      <button data-cap="A harbor street by day"><figure><img src="img/kerb.jpg" alt="Harbor street by day" loading="lazy" width="1400" height="788"><figcaption>Harbor street, day</figcaption></figure></button>
+      <button data-cap="The pharmacy counter: one of the jobs, one of the registers"><figure><img src="img/bar.jpg" alt="Pharmacy interior with a long counter and stools" loading="lazy" width="1400" height="788"><figcaption>The pharmacy</figcaption></figure></button>
+      <button data-cap="Night phase with the in-game HUD"><figure><img src="img/hudnight.jpg" alt="Night phase with HUD" loading="lazy" width="1400" height="788"><figcaption>Night, with HUD</figcaption></figure></button>
+    </div>
+  </div>
+  <dialog class="light" id="light">
+    <img id="light-img" src="" alt="">
+    <div class="cap"><span id="light-cap"></span><button type="button" id="light-close">Close</button></div>
+  </dialog>
+</section>
+
+<section class="truth" id="truth">
+  <div class="wrap">
+    <div class="eyebrow">Match end · <b>the Truth</b></div>
+    <h2 class="display">When it's over, the city shows its hand.</h2>
+    <p class="lede">Every match ends with the Truth: who stood where, who lied, who believed them.</p>
+    <div class="tl">
+      <ul class="log">
+        <li class="key"><span class="t">23:04</span><span class="w">A shot on Cannery Street. <em>Heard by six</em>, reported by four.</span></li>
+        <li><span class="t">23:05</span><span class="w">The pharmacist leaves by the back door. <s>"I was asleep upstairs."</s></span></li>
+        <li class="key"><span class="t">05:40</span><span class="w">Body found on Harbour Row.</span></li>
+        <li><span class="t">09:00</span><span class="w">Seven hands for the docker. <em>The docker was Town.</em></span></li>
+        <li class="key"><span class="t">09:03</span><span class="w">The Family smiles. The sun goes down again.</span></li>
+      </ul>
+      <div class="stampbox">
+        <span class="st">Sealed until dawn</span>
+        <div class="big">Nothing here<br>reached <span>your screen</span><br>before it was over.</div>
+        <p>The server keeps every secret until the last vote. Then the record opens for everyone, ghosts included.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="paper" aria-label="The Port Sable Ledger, a sample of the in-game morning paper">
+  <div class="sheet">
+    <div class="masthead">
+      <div class="top"><span>Vol. XXXI · No. 7,104</span><span>Port Sable, Thursday morning</span><span>Price: one cent</span></div>
+      <h2>The Port Sable Ledger</h2>
+      <div class="sub">Dawn edition · printed while you slept</div>
+    </div>
+    <h3 class="headline">Body found on Harbour Row; nobody saw anything, everybody knows something</h3>
+    <p class="deck">Three sets of prints survived the rain. One of them walked back toward the pharmacy.</p>
+    <div class="columns">
+      <p>The dock crews found him at first light under the Harbour Row sign, hat still on. One shot was heard from Cannery Street, a little before the lamps came back on.</p>
+      <p>The hotel register shows four guests after dusk. The switchboard log shows one call, never answered. The pharmacy book shows a sale of iodine to a customer who did not sign.</p>
+      <p>The Ledger does not accuse. The Ledger prints what the city knows. The trial opens at nine. Ballots will be cast in the open, as is the custom of this town.</p>
+    </div>
+    <div class="note">Every dawn the game prints a paper from the real events of your match. The names in yours will be your friends'.</div>
+  </div>
+</section>
+
+<section id="wardrobe">
+  <div class="wrap">
+    <div class="eyebrow">The wardrobe · <b>cosmetic only</b></div>
+    <h2 class="display">Dress the part.<br>It won't save you.</h2>
+    <div class="ward">
+      <div class="mannequin" aria-hidden="true">
+        <svg viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="385" rx="70" ry="9" fill="rgba(0,0,0,.5)"/>
+          <rect x="78" y="300" width="18" height="78" fill="#1a1c22"/><rect x="104" y="300" width="18" height="78" fill="#1a1c22"/>
+          <path id="m-coat" class="coat" d="M60 150 L140 150 L160 310 L40 310 Z" fill="#3b3a36"/>
+          <path d="M100 150 L88 310 L112 310 Z" fill="rgba(0,0,0,.35)"/>
+          <path id="m-lapel" d="M60 150 L100 150 L100 215 L80 190 Z M140 150 L100 150 L100 215 L120 190 Z" fill="rgba(0,0,0,.25)"/>
+          <circle cx="100" cy="118" r="26" fill="#d9b48f"/>
+          <path d="M70 100 L130 100 L128 70 L72 70 Z" id="m-hat" fill="#2a2724"/>
+          <path d="M52 104 L148 104 L140 114 L60 114 Z" id="m-brim" fill="#2a2724"/>
+          <rect x="72" y="92" width="56" height="8" id="m-band" fill="#e9b64a"/>
+        </svg>
+      </div>
+      <div>
+        <p class="lede">Coats, hats, bands, scarves. Never your role, your odds, or what you know.</p>
+        <div class="swatches" id="swatches">
+          <button class="sw" type="button" aria-pressed="true" data-coat="#3b3a36" data-hat="#2a2724" data-band="#e9b64a"><i style="background:#3b3a36"></i><span><b>Dock grey</b><small>Standard issue</small></span></button>
+          <button class="sw" type="button" aria-pressed="false" data-coat="#5b3a24" data-hat="#3a2416" data-band="#7fe3d8"><i style="background:#5b3a24"></i><span><b>Harbour tan</b><small>Season one</small></span></button>
+          <button class="sw" type="button" aria-pressed="false" data-coat="#1f2a3a" data-hat="#141a24" data-band="#b23a2e"><i style="background:#1f2a3a"></i><span><b>Midnight navy</b><small>Season one</small></span></button>
+          <button class="sw" type="button" aria-pressed="false" data-coat="#4a1d19" data-hat="#2a0f0d" data-band="#eadfc6"><i style="background:#4a1d19"></i><span><b>Oxblood</b><small>Rare</small></span></button>
+          <button class="sw" type="button" aria-pressed="false" data-coat="#e2d6bb" data-hat="#d9c9a4" data-band="#1b1710"><i style="background:#e2d6bb"></i><span><b>Pier white</b><small>Rare</small></span></button>
+          <button class="sw" type="button" aria-pressed="false" data-coat="#2d3a2a" data-hat="#1c261b" data-band="#e9b64a"><i style="background:#2d3a2a"></i><span><b>Cannery green</b><small>Season two</small></span></button>
+        </div>
+        <div class="fine">Free to play · wardrobe bought with Sable · no pay to win</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="eyebrow">Questions · <b>from the town hall</b></div>
+    <h2 class="display">Before you accuse anybody.</h2>
+    <div class="faq">
+      <details open><summary>Is it really free?</summary><p>Yes. Cosmetics are bought with Sable, the in-game coin. Nothing for sale changes roles, odds or information.</p></details>
+      <details><summary>How many players?</summary><p>Four to twelve. Roles scale with the group.</p></details>
+      <details><summary>Do I need a microphone?</summary><p>It helps a lot. Voice fades with distance, so whispering in a doorway is a real tactic. Text works too.</p></details>
+      <details><summary>Is there a campaign?</summary><p>No. Every match writes its own story, and the Truth tells it back to you.</p></details>
+      <details><summary>Which platforms?</summary><p>PC on Steam first. iOS and Android later, same account, same wardrobe.</p></details>
+      <details><summary>How violent is it?</summary><p>16+. A shot in the dark, a body under a coat. No blood.</p></details>
+      <details><summary>When can I play?</summary><p>Private playtests now, by invitation. Steam page next.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="studio" id="studio">
+  <div class="wrap">
+    <div class="eyebrow">The studio · <b>Oxiana Games</b></div>
+    <h2 class="display">Made in Tashkent.<br>We build the city. You bring the lies.</h2>
+    <div class="two">
+      <div>
+        <p class="lede">Oxiana Games is a small studio in Tashkent, Uzbekistan, building Dawn Will Tell in Unreal Engine 5.</p>
+        <dl class="spec">
+          <dt>Price</dt><dd>Free to play. Cosmetics only, never power.</dd>
+          <dt>Platforms</dt><dd>PC on Steam first. iOS and Android later.</dd>
+          <dt>Players</dt><dd>4 to 12, proximity voice, about 25 minutes.</dd>
+          <dt>Rating</dt><dd>16+. Violence implied, never shown.</dd>
+          <dt>Stage</dt><dd>Pre-alpha, private playtests.</dd>
+        </dl>
+      </div>
+      <div class="join" id="join">
+        <h3>Join the playtest</h3>
+        <p>Small groups, by invitation. Tell us how many you are and when you play.</p>
+        <div class="mail">
+          <code id="mail-text">oxianagames@gmail.com</code>
+          <button class="btn" type="button" id="copy-mail">Copy address</button>
+          <span class="ok" id="copy-ok"></span>
+        </div>
+        <div class="soon"><i></i> Steam page and wishlist: coming</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><a class="brand" href="#top">DAWN <span>WILL</span> TELL</a><br>© 2026 Oxiana Games, Tashkent, Uzbekistan. Dawn Will Tell is a working title.</div>
+    <div>Unreal and its logo are trademarks of Epic Games, Inc.<br>In-engine pre-alpha captures. No AI-generated imagery.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* rain on the hero */
+  var c = document.getElementById('rain');
+  if (c && c.getContext && !reduce) {
+    var ctx = c.getContext('2d'), drops = [], W = 0, H = 0;
+    function size(){ W = c.width = c.clientWidth; H = c.height = c.clientHeight; drops = []; for (var i = 0; i < Math.min(260, W / 5); i++) drops.push(mk(true)); }
+    function mk(any){ return { x: Math.random() * W, y: any ? Math.random() * H : -20, l: 10 + Math.random() * 18, s: 9 + Math.random() * 7, a: .12 + Math.random() * .25 }; }
+    function tick(){
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = 'rgba(200,220,235,1)'; ctx.lineWidth = 1;
+      for (var i = 0; i < drops.length; i++) {
+        var d = drops[i];
+        ctx.globalAlpha = d.a; ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 1.2, d.y + d.l); ctx.stroke();
+        d.y += d.s; d.x -= .4;
+        if (d.y > H) drops[i] = mk(false);
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(tick);
+    }
+    size(); window.addEventListener('resize', size); tick();
+  }
+
+  /* match clock */
+  var phases = Array.prototype.slice.call(document.querySelectorAll('.phase'));
+  var stageTag = document.getElementById('stage-tag'), stageTime = document.getElementById('stage-time');
+  var idx = 0, timer = null;
+  function show(i){
+    idx = i;
+    phases.forEach(function(p, j){
+      var on = j === i; p.setAttribute('aria-selected', on ? 'true' : 'false');
+      var img = document.getElementById(p.getAttribute('data-img')); if (img) img.classList.toggle('on', on);
+    });
+    var p = phases[i];
+    document.documentElement.style.setProperty('--phase', p.getAttribute('data-color'));
+    stageTag.textContent = p.getAttribute('data-tag'); stageTime.textContent = p.getAttribute('data-time');
+  }
+  phases.forEach(function(p, i){ p.addEventListener('click', function(){ show(i); if (timer) { clearInterval(timer); timer = null; } }); });
+  if (!reduce) timer = setInterval(function(){ show((idx + 1) % phases.length); }, 6000);
+
+  /* gallery lightbox */
+  var dlg = document.getElementById('light'), li = document.getElementById('light-img'), lc = document.getElementById('light-cap');
+  document.querySelectorAll('#grid button').forEach(function(b){
+    b.addEventListener('click', function(){
+      var img = b.querySelector('img'); li.src = img.src; li.alt = img.alt; lc.textContent = b.getAttribute('data-cap');
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    });
+  });
+  document.getElementById('light-close').addEventListener('click', function(){ dlg.close ? dlg.close() : dlg.removeAttribute('open'); });
+  dlg.addEventListener('click', function(e){ if (e.target === dlg) { dlg.close ? dlg.close() : dlg.removeAttribute('open'); } });
+
+  /* lineup game */
+  var row = document.getElementById('row'), verdict = document.getElementById('verdict'), again = document.getElementById('again');
+  var names = ['the docker', 'the pharmacist', 'the clerk', 'the switchboard girl', 'the barber', 'the night porter', 'the fishmonger', 'the typist'];
+  var fam = [];
+  function fig(i, h, tilt){
+    return '<svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<rect x="38" y="150" width="10" height="46" fill="#15181e"/><rect x="52" y="150" width="10" height="46" fill="#15181e"/>' +
+      '<path class="coat" d="M30 ' + (78 + h) + ' L70 ' + (78 + h) + ' L82 158 L18 158 Z" fill="#23262d"/>' +
+      '<path d="M50 ' + (78 + h) + ' L44 158 L56 158 Z" fill="rgba(0,0,0,.4)"/>' +
+      '<circle cx="50" cy="' + (62 + h) + '" r="13" fill="#1b1e24"/>' +
+      '<g transform="rotate(' + tilt + ' 50 ' + (50 + h) + ')"><path d="M36 ' + (54 + h) + ' L64 ' + (54 + h) + ' L62 ' + (36 + h) + ' L38 ' + (36 + h) + ' Z" fill="#15181e"/><path d="M24 ' + (56 + h) + ' L76 ' + (56 + h) + ' L72 ' + (61 + h) + ' L28 ' + (61 + h) + ' Z" fill="#15181e"/></g></svg>';
+  }
+  function deal(){
+    fam = []; while (fam.length < 2) { var r = Math.floor(Math.random() * 8); if (fam.indexOf(r) < 0) fam.push(r); }
+    row.classList.remove('done'); row.innerHTML = ''; again.hidden = true; verdict.innerHTML = 'Click a coat to accuse.';
+    var order = names.slice().sort(function(){ return Math.random() - .5; });
+    for (var i = 0; i < 8; i++) {
+      var b = document.createElement('button'); b.className = 'sus'; b.type = 'button';
+      b.setAttribute('data-fam', fam.indexOf(i) >= 0 ? '1' : '0'); b.setAttribute('aria-label', 'Accuse suspect ' + (i + 1));
+      b.innerHTML = fig(i, Math.round(Math.random() * 10 - 5), Math.round(Math.random() * 10 - 5)) + '<span class="who">' + order[i] + '</span>';
+      (function(b, i){ b.addEventListener('click', function(){ accuse(b, i); }); })(b, i);
+      row.appendChild(b);
+    }
+  }
+  function accuse(b, i){
+    if (row.classList.contains('done')) return;
+    row.classList.add('done'); again.hidden = false;
+    var who = b.querySelector('.who').textContent;
+    if (fam.indexOf(i) >= 0) verdict.innerHTML = 'You hanged <b>' + who + '</b>. Family. <b>Lucky.</b> One more coat to find, and now they know you can guess.';
+    else verdict.innerHTML = 'You hanged <b>' + who + '</b>. Town. The Family smiles. <b>This is why you talk first.</b>';
+  }
+  again.addEventListener('click', deal);
+  deal();
+
+  /* wardrobe */
+  var coat = document.getElementById('m-coat'), hat = document.getElementById('m-hat'), brim = document.getElementById('m-brim'), band = document.getElementById('m-band');
+  var sws = Array.prototype.slice.call(document.querySelectorAll('.sw'));
+  sws.forEach(function(s){ s.addEventListener('click', function(){
+    sws.forEach(function(x){ x.setAttribute('aria-pressed', x === s ? 'true' : 'false'); });
+    coat.setAttribute('fill', s.getAttribute('data-coat')); hat.setAttribute('fill', s.getAttribute('data-hat')); brim.setAttribute('fill', s.getAttribute('data-hat')); band.setAttribute('fill', s.getAttribute('data-band'));
+  }); });
+
+  /* copy address */
+  var ok = document.getElementById('copy-ok'), txt = document.getElementById('mail-text');
+  document.getElementById('copy-mail').addEventListener('click', function(){
+    var v = txt.textContent;
+    function sel(){ var r = document.createRange(); r.selectNodeContents(txt); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); ok.textContent = 'Selected, press copy'; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(function(){ ok.textContent = 'Copied'; }, sel); else sel();
+    setTimeout(function(){ ok.textContent = ''; }, 2500);
+  });
+})();
+</script>
+
+</body>
+</html>
