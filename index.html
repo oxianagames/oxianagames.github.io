@@ -2,571 +2,529 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dawn Will Tell — a first-person social deduction game in a 1950s noir harbor city</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2307080A'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%23C9A25A' stroke-width='3'/%3E%3Cpath d='M32 14 A18 18 0 0 1 32 50 Z' fill='%23F0A43A'/%3E%3C/svg%3E">
-<meta name="description" content="Dawn Will Tell: every face in the city is a real player, and some of them are lying. A voice-first social deduction game set in Port Sable, a rain-soaked 1950s harbor city. Free to play on PC, mobile next. By OXIANA GAMES, Tashkent.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dawn Will Tell · OXIANA GAMES</title>
+<meta name="description" content="Dawn Will Tell is a free-to-play multiplayer social deduction game in a living 3D 1950s harbor city. Made by OXIANA GAMES in Termiz, Uzbekistan. PC on Steam first, mobile later.">
 <meta name="theme-color" content="#07080A">
-<meta property="og:title" content="Dawn Will Tell">
-<meta property="og:description" content="Night lies. Dawn tells. A first-person social deduction game in a 1950s noir harbor city. Free to play.">
-<meta property="og:image" content="img/keyart.jpg">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://oxianagames.github.io/">
+<meta property="og:title" content="Dawn Will Tell · OXIANA GAMES">
+<meta property="og:description" content="By day you talk, walk and lie. By night the killers move. At dawn the town puts someone on trial. A free-to-play social deduction game in a living 1950s harbor city.">
+<meta property="og:image" content="https://oxianagames.github.io/img/hero-1280.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2307080A'/%3E%3Cpath d='M10 40a22 22 0 0 1 44 0z' fill='%23F0A43A'/%3E%3Crect x='8' y='44' width='48' height='4' fill='%23EFE6D2'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/Archivo-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="img/hero-2400.jpg" imagesrcset="img/hero-1280.jpg 1280w, img/hero-2400.jpg 2400w" imagesizes="100vw" media="(min-width: 701px)">
+<link rel="preload" as="image" href="img/hero-tall-1000.jpg" media="(max-width: 700px)">
+<script>document.documentElement.classList.add('js')</script>
 <style>
-@font-face{font-family:"Limelight";src:url("fonts/Limelight-Regular.ttf") format("truetype");font-display:swap}
-@font-face{font-family:"Bebas";src:url("fonts/BebasNeue-Regular.ttf") format("truetype");font-display:swap}
-@font-face{font-family:"Courier Prime";src:url("fonts/CourierPrime-Regular.ttf") format("truetype");font-display:swap}
-@font-face{font-family:"Courier Prime";font-weight:700;src:url("fonts/CourierPrime-Bold.ttf") format("truetype");font-display:swap}
-:root{--ink:#07080A;--plate:#0E1116;--plate2:#12161C;--line:rgba(201,162,90,.42);--line2:rgba(201,162,90,.18);--brass:#C9A25A;--brasshi:#ECD09A;--cream:#EFE6D2;--dim:#A39A88;--amber:#F0A43A;--teal:#2A5F80;--tealhi:#4E8DB5;--red:#B23A2E;--phase:#F0A43A}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;background:var(--ink)}
-body{font-family:"Courier Prime",ui-monospace,monospace;color:var(--cream);background:var(--ink);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-img{display:block;max-width:100%}
-a{color:var(--brasshi)}
+@font-face{font-family:"Archivo";src:url("fonts/Archivo-Latin.woff2") format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+
+:root{
+  --bg:#07080A; --surface:#0E1116; --surface-2:#151A21;
+  --ink:#EFE6D2; --muted:#A9A190;
+  --accent:#F0A43A; --accent-press:#D98E26; --teal:#2A5F80; --teal-hi:#4E8DB5;
+  --paper:#EFE6D2; --paper-ink:#0B0C0E; --paper-muted:#4B4539;
+  --m:clamp(16px,3.2vw,48px);
+  --gap:clamp(16px,1.6vw,24px);
+  --t-display:clamp(60px,8.4vw,168px);
+  --t-h2:clamp(36px,4.6vw,72px);
+  --t-lead:clamp(18px,1.5vw,22px);
+  --t-body:17px;
+  --t-ui:16px;
+  --t-small:14px;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0;padding:0}
+html{background:var(--bg);-webkit-text-size-adjust:100%;scroll-padding-top:16px}
+body{font-family:"Archivo",system-ui,sans-serif;font-size:var(--t-body);line-height:1.55;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-.wrap{width:min(1180px,100% - 32px);margin-inline:auto}
-.kick{font-family:"Bebas",sans-serif;letter-spacing:.22em;font-size:15px;color:var(--brass);display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.kick::before{content:"";width:30px;height:2px;background:var(--brass)}
-h1,h2,h3.l{font-family:"Limelight",serif;font-weight:400;letter-spacing:.02em;line-height:1.04}
-h2{font-size:clamp(30px,4.2vw,50px);margin-bottom:14px;text-shadow:0 0 30px rgba(240,164,58,.12)}
-h2 em{font-style:normal;color:var(--brasshi)}
-.lead{font-size:clamp(16px,1.35vw,19px);max-width:720px;color:var(--cream)}
-.lead b,p b,li b{font-weight:700;color:var(--brasshi)}
-.bebas{font-family:"Bebas",sans-serif;letter-spacing:.14em}
-section{padding:clamp(64px,8vw,110px) 0;position:relative}
-section+section{border-top:1px solid var(--line2)}
-.btn{display:inline-flex;align-items:center;gap:10px;font-family:"Bebas",sans-serif;letter-spacing:.16em;font-size:19px;padding:14px 22px 11px;border:1px solid var(--line);color:var(--brasshi);background:rgba(9,11,15,.72);text-decoration:none;border-radius:2px;transition:transform .15s,box-shadow .15s,background .15s}
-.btn:hover{transform:translateY(-1px);background:rgba(14,17,22,.95)}
-.btn.amber{color:#1A1107;background:linear-gradient(#F6BD57,#D68A2C 60%,#B56D1F);border-color:#F8DCA2;box-shadow:0 0 0 1px rgba(0,0,0,.4),0 10px 30px rgba(240,164,58,.18)}
-.btn.amber:hover{box-shadow:0 0 0 1px rgba(0,0,0,.4),0 14px 34px rgba(240,164,58,.28)}
-.pill{display:inline-block;font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:15px;color:var(--brasshi);border:1px solid var(--line);padding:7px 12px 5px;border-radius:2px;background:rgba(9,11,15,.7)}
-.card{background:rgba(14,17,22,.92);border:1px solid var(--line);border-top:3px solid var(--brass);padding:20px 22px}
-.card h3{font-family:"Bebas",sans-serif;letter-spacing:.12em;font-size:23px;color:var(--brasshi);margin-bottom:6px;font-weight:400}
-.card p{font-size:15.5px;color:var(--cream)}
-.frame{position:relative;overflow:hidden;border:1px solid var(--line);background:#000}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+::selection{background:var(--accent);color:var(--paper-ink)}
+h1,h2,h3{font-weight:800;line-height:1}
+h2{font-size:var(--t-h2);font-stretch:112%;letter-spacing:-.025em;line-height:.98}
+.lead{font-size:var(--t-lead);line-height:1.45;max-width:46ch}
+.small{font-size:var(--t-small);line-height:1.45;color:var(--muted)}
+.wrap{padding-inline:var(--m)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* buttons: one shape, square corners */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;font-size:16px;font-weight:700;font-stretch:108%;letter-spacing:.01em;text-decoration:none;border-radius:0;transition:background-color .25s ease,color .25s ease,transform .2s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn-accent{background:var(--accent);color:var(--paper-ink)}
+.btn-accent:hover{background:#F6B65A}
+.btn-accent:active{background:var(--accent-press)}
+.btn-ink{background:var(--ink);color:var(--paper-ink)}
+.btn-ink:hover{background:#fff8e8}
+.btn .arr{transition:transform .3s var(--ease)}
+.btn:hover .arr{transform:translateX(4px)}
+
+/* ---------- top bar ---------- */
+.top{position:absolute;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px var(--m)}
+.wm{font-size:17px;font-weight:800;font-stretch:125%;letter-spacing:.02em;text-decoration:none;white-space:nowrap}
+.top nav{display:flex;gap:30px;margin-left:auto}
+.top nav a{font-size:16px;font-weight:500;text-decoration:none;color:var(--ink);opacity:.86;transition:opacity .2s ease}
+.top nav a:hover{opacity:1;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.top .btn{min-height:44px;padding:0 18px}
+@media (max-width:820px){.top nav{display:none}.wm{font-size:15px}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100svh;display:grid;grid-template-columns:minmax(0,1fr);align-content:end;overflow:hidden;isolation:isolate;container-type:inline-size}
+.hero-pic{position:absolute;inset:0;z-index:-2}
+.hero-pic img{width:100%;height:100%;object-fit:cover;object-position:50% 38%;transform-origin:46% 40%}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  /* taste-skill-ignore: neutral scrim under text on a photo */ background:linear-gradient(180deg,rgba(7,8,10,.55) 0%,rgba(7,8,10,0) 18%,rgba(7,8,10,0) 46%,rgba(7,8,10,.72) 76%,var(--bg) 100%)}
+.hero-copy{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:center;padding:0 var(--m);margin-bottom:clamp(28px,3.4vw,52px)}
+.hero-copy .lead{grid-column:1/8;max-width:36ch}
+.hero-act{grid-column:9/13;justify-self:end;display:flex;align-items:center;gap:18px}
+.btn{white-space:nowrap}
+.title{font-size:min(calc((100cqw - 2 * var(--m)) / 10.8),220px);font-stretch:125%;font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:.84;padding:0 var(--m) clamp(20px,2.4vw,36px);white-space:nowrap}
+.title .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.04em}
+.title .w>span{display:inline-block}
+.pin{position:absolute;left:49.5%;top:47%;display:flex;align-items:center;gap:10px;font-size:var(--t-small);font-weight:500;color:var(--ink)}
+.pin i{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+@media (max-width:900px){
+  .hero-copy{display:block}
+  .hero-act{justify-content:flex-start;margin-top:22px}
+}
+@media (max-width:700px){
+  .hero{min-height:max(640px,100svh)}
+  .hero-pic img{object-position:50% 30%}
+  .hero::after{/* taste-skill-ignore: neutral scrim under text on a photo */ background:linear-gradient(180deg,rgba(7,8,10,.6) 0%,rgba(7,8,10,0) 16%,rgba(7,8,10,0) 40%,rgba(7,8,10,.8) 68%,var(--bg) 100%)}
+  .hero-copy{display:block;margin-bottom:22px}
+  .hero-copy .lead{max-width:30ch}
+  .hero-act{justify-content:flex-start;margin-top:20px}
+  .title{font-size:calc((100cqw - 2 * var(--m)) / 6.7);white-space:normal;line-height:.86}
+  .title .w{display:block}
+  .pin{left:auto;right:var(--m);top:88px}
+}
+
+/* ---------- the clock (pinned scene) ---------- */
+.clock{position:relative;background:var(--bg);padding-top:clamp(110px,12vw,190px)}
+.clock-head{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);align-items:end;padding:0 var(--m)}
+.clock-scene{position:relative}
+.clock-stage{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;gap:clamp(16px,2.4vh,28px);padding:clamp(28px,4vw,56px) var(--m) clamp(40px,6vw,80px)}
+.clock-head h2{grid-column:1/10}
+.clock-head .lead{grid-column:10/13;max-width:30ch;justify-self:end}
+.frame-wrap{min-height:0;display:grid;grid-template-columns:minmax(0,1fr);place-items:center}
+.frame{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);width:100%}
+.frame figure{position:relative;overflow:hidden;background:var(--surface);aspect-ratio:16/9}
 .frame img{width:100%;height:100%;object-fit:cover}
-.tag{position:absolute;left:10px;bottom:10px;font-family:"Bebas",sans-serif;letter-spacing:.16em;font-size:13px;color:var(--brasshi);background:rgba(7,8,10,.78);border:1px solid var(--line);padding:5px 9px 3px}
-.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
-.rv.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+.frame figure:nth-child(1) img{object-position:44% 50%}
+.frame figure:nth-child(2) img{object-position:70% 50%}
+.frame figure:nth-child(3) img{object-position:84% 50%}
+.frame figure:nth-child(4) img{object-position:50% 40%}
+.frame figcaption{position:absolute;left:0;right:0;bottom:0;padding:clamp(16px,2vw,28px);padding-top:80px;/* taste-skill-ignore: neutral scrim under text on a photo */ background:linear-gradient(0deg,rgba(7,8,10,.86),rgba(7,8,10,0));display:grid;gap:6px}
+.frame h3{font-size:var(--t-lead);font-stretch:112%;display:flex;align-items:baseline;gap:14px}
+.frame h3 time{font-size:var(--t-small);font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+.frame figcaption p{max-width:44ch}
+.frame figcaption .small{color:var(--ink);opacity:.8}
+.clock-foot{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.now-line{font-size:var(--t-ui);max-width:52ch}
+.now-line b{color:var(--accent);font-weight:700}
+.hours{list-style:none;display:flex;gap:6px}
+.hours button{min-height:44px;padding:0 14px;display:flex;align-items:center;gap:8px;font-size:var(--t-ui);font-weight:600;color:var(--muted);background:var(--surface);transition:background-color .25s ease,color .25s ease}
+.hours button:hover{color:var(--ink);background:var(--surface-2)}
+.hours button[aria-current="true"]{color:var(--paper-ink);background:var(--ink)}
+.hours .tag{font-size:var(--t-small);color:var(--accent);font-weight:700}
+.hours button[aria-current="true"] .tag{color:#8A5000}
+.js .clock-scene{height:360svh}
+.js .clock-stage{position:sticky;top:0;height:100svh;grid-template-rows:minmax(0,1fr) auto;padding-top:clamp(20px,4vh,48px);padding-bottom:clamp(18px,3.2vh,36px)}
+.js .frame-wrap{container-type:size}
+.js .frame{display:block;position:relative;width:min(100cqw,100cqh*16/9);aspect-ratio:16/9}
+.js .frame figure{position:absolute;inset:0;aspect-ratio:auto;opacity:0;transition:opacity 1.1s ease}
+.js .frame figure.on{opacity:1}
+.js .frame figure img{transform:scale(1.001);transition:transform 1.2s ease}
+.js .frame figure.on img{transform:scale(1.07);transition:transform 7s linear}
+@media (max-width:900px){
+  .clock-head{display:block}
+  .clock-head .lead{margin-top:12px;justify-self:start;max-width:46ch}
+  .js .frame{width:100cqw;height:100cqh;aspect-ratio:auto}
+}
+@media (max-width:700px){
+  .frame{grid-template-columns:1fr}
+  .clock-head h2{font-size:clamp(32px,9vw,44px)}
+  .clock-foot{display:grid;gap:12px}
+  .hours{width:100%}
+  .hours li{flex:1}
+  .hours button{width:100%;justify-content:center;padding:0 6px}
+  .hours .tag{display:none}
+}
 
-/* top bar */
-.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:linear-gradient(rgba(7,8,10,.92),rgba(7,8,10,.75));backdrop-filter:blur(8px);border-bottom:1px solid var(--line2)}
-.bar .wm{font-family:"Limelight",serif;font-size:19px;letter-spacing:.06em;color:var(--cream);text-decoration:none;white-space:nowrap}
-.bar .wm span{color:var(--brasshi)}
-.bar nav{display:flex;gap:22px}
-.bar nav a{font-family:"Bebas",sans-serif;letter-spacing:.16em;font-size:16px;color:var(--dim);text-decoration:none}
-.bar nav a:hover{color:var(--brasshi)}
-.bar .btn{padding:10px 16px 8px;font-size:16px}
-@media (max-width:860px){.bar nav{display:none}}
+/* ---------- why it plays different (split stage, pinned) ---------- */
+.diff{position:relative;background:var(--surface);padding-top:clamp(100px,11vw,170px)}
+.diff-head{padding:0 var(--m);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap)}
+.diff-head h2{grid-column:1/-1}
+.diff-scene{position:relative}
+.diff-stage{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap);padding:clamp(40px,5vw,72px) 0 clamp(80px,8vw,120px) var(--m)}
+.diff-copy{grid-column:1/6;align-self:center;padding-right:var(--gap)}
+.diff-bg{grid-column:6/13;position:relative;display:grid;gap:var(--gap)}
+.diff-bg figure{position:relative;overflow:hidden;background:var(--bg);aspect-ratio:16/10}
+.diff-bg img{width:100%;height:100%;object-fit:cover}
+.cap{position:absolute;font-size:var(--t-small);font-weight:500;color:var(--ink);background:rgba(7,8,10,.78);padding:4px 9px;line-height:1.4}
+.diff-bg figcaption{left:16px;bottom:16px}
+.steps{list-style:none;display:grid;gap:30px}
+.steps h3{font-size:var(--t-lead);font-stretch:112%;font-weight:750;color:var(--ink)}
+.steps p{margin-top:8px;max-width:40ch}
+.js .diff-scene{height:300svh}
+.js .diff-stage{position:sticky;top:0;height:100svh;padding-top:0;padding-bottom:0;align-items:stretch}
+.js .diff-bg{display:block}
+.js .diff-bg figure{position:absolute;inset:0;aspect-ratio:auto;opacity:0;transition:opacity 1.2s ease}
+.js .diff-bg figure.on{opacity:1}
+.js .diff-bg figure img{transform:scale(1.06);transition:transform 1.8s var(--ease)}
+.js .diff-bg figure.on img{transform:scale(1)}
+.js .steps{gap:0;grid-template-rows:auto auto auto minmax(9.5em,auto)}
+.js .steps li{display:contents}
+.js .steps h3{padding:10px 0 10px 24px;position:relative;color:var(--muted);transition:color .4s ease}
+.js .steps h3::before{content:"";position:absolute;left:0;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--muted);transition:background-color .4s ease,transform .4s var(--ease)}
+.js .steps li.on h3{color:var(--ink)}
+.js .steps li.on h3::before{background:var(--accent);transform:scale(1.25)}
+.js .steps li:nth-child(1) h3{grid-row:1}
+.js .steps li:nth-child(2) h3{grid-row:2}
+.js .steps li:nth-child(3) h3{grid-row:3}
+.js .steps p{grid-row:4;grid-column:1;margin-top:24px;padding-left:24px;font-size:var(--t-lead);line-height:1.45;opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .6s var(--ease)}
+.js .steps li.on p{opacity:1;transform:none}
+@media (max-width:900px){
+  .diff-stage{display:flex;flex-direction:column-reverse;padding-right:var(--m)}
+  .diff-copy{padding:28px 0 0}
+  .diff-bg figure{aspect-ratio:4/3}
+  .js .diff-stage{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;padding:0;align-items:stretch}
+  .js .diff-bg{grid-row:1;grid-column:1}
+  .js .diff-copy{grid-row:2;grid-column:1;padding:22px var(--m) 28px}
+  .js .steps{grid-template-rows:auto auto auto minmax(7.5em,auto)}
+}
+@media (max-width:700px){
+  .diff-head h2{font-size:clamp(32px,9vw,44px)}
+  .js .steps h3{padding:7px 0 7px 20px}
+  .js .steps p{margin-top:12px;padding-left:20px}
+  .diff-bg figure:nth-child(1) img{object-position:62% 50%}
+  .diff-bg figure:nth-child(2) img{object-position:44% 50%}
+  .diff-bg figure:nth-child(3) img{object-position:52% 50%}
+}
 
-/* hero */
-.hero{min-height:100svh;display:flex;align-items:flex-end;padding:0;border-top:0;position:relative;overflow:hidden}
-.hero .bg{position:absolute;inset:0}
-.hero .bg img{width:100%;height:100%;object-fit:cover;object-position:62% 40%}
-.hero .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,8,10,.94) 0%,rgba(7,8,10,.72) 38%,rgba(7,8,10,.25) 70%,rgba(7,8,10,.15) 100%),linear-gradient(0deg,var(--ink) 0%,rgba(7,8,10,.4) 35%,rgba(7,8,10,0) 60%),linear-gradient(180deg,rgba(7,8,10,.8) 0%,rgba(7,8,10,0) 25%)}
-#rain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.55}
-.hero .wrap{position:relative;z-index:2;padding:140px 0 56px}
-.hero h1{font-size:clamp(56px,9vw,124px);text-shadow:0 0 60px rgba(240,164,58,.28),0 4px 0 rgba(0,0,0,.6);color:var(--cream)}
-.hero h1 span{display:block;color:var(--brasshi)}
-.hero .tag-line{font-size:clamp(20px,2.4vw,30px);margin-top:18px}
-.hero .tag-line i{font-style:normal;color:var(--brasshi)}
-.hero .lead{margin-top:18px;max-width:600px}
-.hero .cta{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.hero .pills{margin-top:34px;display:flex;flex-wrap:wrap;gap:8px}
-.hero .fine{margin-top:18px;font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:13px;color:#8A806A}
-.scroll{position:absolute;right:24px;bottom:26px;z-index:2;font-family:"Bebas",sans-serif;letter-spacing:.2em;font-size:13px;color:var(--brass);writing-mode:vertical-rl;text-decoration:none;opacity:.8}
-@media (max-width:700px){.hero .bg img{object-position:68% 30%}.scroll{display:none}}
+/* ---------- studio ---------- */
+.studio{padding:clamp(110px,13vw,200px) var(--m) clamp(110px,12vw,180px);background:var(--bg)}
+.studio-head{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gap)}
+.studio-head h2{grid-column:1/-1}
+.studio-head .lead{grid-column:1/8;margin-top:24px;max-width:52ch}
+.mosaic{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap);margin-top:clamp(48px,6vw,80px);align-items:start}
+.m-photo{grid-column:1/9;position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--surface)}
+.m-photo img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease)}
+.m-photo:hover img{transform:scale(1.03)}
+.m-photo .note{position:absolute;top:0;right:0;width:min(340px,48%);padding:22px;background:var(--paper);color:var(--paper-ink);font-size:var(--t-ui);line-height:1.5}
+.m-photo .note b{font-weight:700}
+.m-photo figcaption{left:16px;bottom:16px}
+.m-side{grid-column:9/13;display:grid;gap:var(--gap)}
+.m-tile{background:var(--teal);aspect-ratio:4/3.6;position:relative;overflow:hidden}
+.m-tile svg{position:absolute;inset:0;width:100%;height:100%}
+.m-tile .lbl{position:absolute;left:18px;bottom:16px;font-size:var(--t-small);font-weight:600;color:var(--ink)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:18px var(--gap)}
+.facts dt{font-size:var(--t-small);color:var(--muted);font-weight:500}
+.facts dd{font-size:var(--t-ui);font-weight:600;margin-top:2px;line-height:1.35;font-variant-numeric:tabular-nums}
+@media (max-width:900px){
+  .studio-head .lead{grid-column:1/-1}
+  .m-photo,.m-side{grid-column:1/-1}
+  .m-side{grid-template-columns:1fr 1fr;align-items:start}
+}
+@media (max-width:700px){
+  .studio-head h2{font-size:clamp(32px,9vw,44px)}
+  .m-photo{aspect-ratio:4/3;overflow:visible;background:none}
+  .m-photo img{aspect-ratio:4/3}
+  .m-photo .note{position:static;width:auto;margin-top:0}
+  .m-photo figcaption{bottom:auto;top:12px;left:12px}
+  .m-side{grid-template-columns:1fr}
+  .m-tile{aspect-ratio:3/2}
+}
 
-/* ticker */
-.ticker{border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);overflow:hidden;background:rgba(14,17,22,.8);padding:10px 0}
-.ticker div{display:flex;gap:48px;white-space:nowrap;font-family:"Bebas",sans-serif;letter-spacing:.2em;font-size:15px;color:var(--brass);animation:tick 48s linear infinite;width:max-content}
-.ticker span::after{content:"◆";margin-left:48px;color:#5A4A28}
-@keyframes tick{to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){.ticker div{animation:none}}
+/* ---------- contact ---------- */
+.contact{position:relative;min-height:100svh;isolation:isolate;display:grid;align-items:start}
+.contact-pic{position:absolute;inset:0;z-index:-1}
+.contact-pic img{width:100%;height:100%;object-fit:cover;object-position:60% 50%}
+.contact-pic figcaption{right:var(--m);bottom:22px}
+.card{margin:60px 0 60px var(--m);width:min(420px,calc(100% - 2*var(--m)));background:var(--paper);color:var(--paper-ink);padding:32px 32px 0;display:grid;align-content:start}
+.card h2{font-size:clamp(32px,2.8vw,44px);font-stretch:112%}
+.card .intro{margin-top:12px;font-size:var(--t-ui);color:var(--paper-ink)}
+.card .mail{display:inline-block;margin-top:18px;font-size:var(--t-lead);font-weight:700;font-stretch:104%;text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px;word-break:break-all}
+.card .mail:hover{color:#6B3F00}
+.sheet{margin-top:22px;display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:var(--t-ui);line-height:1.4}
+.sheet dt{color:var(--paper-muted);font-weight:500}
+.sheet dd{font-weight:600;text-align:right}
+.card .btn{margin:26px -32px 0;min-height:56px}
+@media (max-width:700px){
+  .contact{min-height:0;display:block}
+  .contact-pic{position:relative;height:70svh}
+  .card{margin:-80px var(--m) 0;width:auto;padding:26px 22px 0;position:relative}
+  .card .btn{margin:24px -22px 0}
+  .contact-pic figcaption{bottom:auto;top:84px}
+}
 
-/* pitch */
-.pitch .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
-.beat{border:1px solid var(--line);background:rgba(14,17,22,.9);padding:22px}
-.beat svg{width:40px;height:40px;stroke:var(--brasshi);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-bottom:12px}
-.beat h3{font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:24px;color:var(--brasshi);font-weight:400}
-.beat p{font-size:15.5px;margin-top:6px}
-.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px}
-.facts .card{padding:16px 18px}
-.facts .num{font-family:"Bebas",sans-serif;font-size:50px;line-height:.95;color:var(--amber)}
-.facts .lab{font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:14px;color:var(--dim);margin-top:4px}
-@media (max-width:900px){.pitch .grid3{grid-template-columns:1fr}.facts{grid-template-columns:1fr 1fr}}
+/* ---------- footer ---------- */
+.foot{container-type:inline-size;background:var(--surface);min-height:72svh;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr auto;padding:44px var(--m) 22px;gap:40px}
+.foot-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap);font-size:var(--t-ui);line-height:1.6}
+.foot-cols h3{font-size:var(--t-ui);font-weight:700;margin-bottom:4px}
+.foot-cols p,.foot-cols li{color:var(--muted)}
+.foot-cols ul{list-style:none}
+.foot-cols a{text-decoration:none;color:var(--ink)}
+.foot-cols a:hover{text-decoration:underline;text-underline-offset:4px}
+.foot-word{font-size:min(calc((100cqw - 2 * var(--m)) / 10.3),240px);font-weight:800;font-stretch:125%;letter-spacing:-.03em;line-height:.8;text-transform:uppercase;white-space:nowrap}
+.foot-word span{display:inline-block}
+.legal{font-size:var(--t-small);color:var(--muted);max-width:72ch;line-height:1.5;margin-top:20px}
+@media (max-width:900px){.foot-cols{grid-template-columns:1fr 1fr;row-gap:32px}}
+@media (max-width:700px){.foot{min-height:0;gap:20svh}.foot-word{font-size:calc((100cqw - 2 * var(--m)) / 5.2);white-space:normal;line-height:.84}.foot-word span{display:block}}
 
-/* screens */
-.shots{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:260px 260px;gap:12px;margin-top:36px}
-.shots .frame:first-child{grid-row:1/3}
-.shots button{display:block;width:100%;height:100%;padding:0;text-align:left}
-.shots .frame:hover img{transform:scale(1.03)}
-.shots img{transition:transform .5s ease}
-@media (max-width:900px){.shots{grid-template-columns:1fr 1fr;grid-template-rows:auto}.shots .frame{height:200px}.shots .frame:first-child{grid-row:auto;grid-column:1/3;height:260px}}
-dialog{border:1px solid var(--line);background:#000;padding:0;max-width:min(1200px,94vw);color:var(--cream)}
-dialog::backdrop{background:rgba(0,0,0,.86)}
-dialog img{width:100%;height:auto;max-height:80vh;object-fit:contain}
-dialog .cap{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:15px;color:var(--brasshi)}
-dialog .cap button{color:var(--dim);font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:16px}
-
-/* clock */
-.clock{display:grid;grid-template-columns:1fr 1.1fr;gap:34px;align-items:center;margin-top:36px}
-.phases{list-style:none;display:grid;gap:10px}
-.phase{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:start;padding:16px 18px;border:1px solid var(--line2);background:rgba(14,17,22,.7);cursor:pointer;text-align:left;width:100%;transition:border-color .3s,background .3s}
-.phase .n{font-family:"Bebas",sans-serif;font-size:34px;line-height:1;color:var(--dim);transition:color .3s}
-.phase h3{font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:24px;color:var(--cream);font-weight:400}
-.phase p{font-size:15px;color:var(--dim);margin-top:4px}
-.phase[aria-selected=true]{border-color:var(--phase);background:rgba(14,17,22,.98)}
-.phase[aria-selected=true] .n{color:var(--phase)}
-.phase .prog{grid-column:1/3;height:2px;background:var(--line2);margin-top:12px;overflow:hidden}
-.phase .prog i{display:block;height:100%;width:0;background:var(--phase)}
-.phase[aria-selected=true] .prog i{animation:fill 6s linear forwards}
-@keyframes fill{to{width:100%}}
-.stage{position:relative;aspect-ratio:16/10;border:1px solid var(--line);overflow:hidden;background:#000}
-.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s ease}
-.stage img.on{opacity:1}
-.stage .hud{position:absolute;left:14px;top:14px;display:flex;gap:10px;align-items:center;background:rgba(7,8,10,.74);border:1px solid var(--line);padding:4px 10px 2px}
-.stage .hud b{font-family:"Bebas",sans-serif;font-size:30px;letter-spacing:.06em;color:var(--cream);font-weight:400}
-.stage .hud span{font-family:"Bebas",sans-serif;letter-spacing:.2em;font-size:14px;color:var(--phase);border:1px solid var(--phase);padding:4px 8px 2px}
-.stage .kind{left:14px;bottom:14px}
-@media (max-width:900px){.clock{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){.phase[aria-selected=true] .prog i{animation:none;width:100%}}
-
-/* city */
-.city{background:radial-gradient(ellipse at 100% 0%,rgba(42,95,128,.18),transparent 55%)}
-.city .two{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:center;margin-top:30px}
-.city .frame{aspect-ratio:16/9}
-.exhibits{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ex{border:1px solid var(--line2);background:rgba(14,17,22,.85);padding:16px 18px}
-.ex .lab{font-family:"Bebas",sans-serif;letter-spacing:.2em;font-size:13px;color:var(--brass)}
-.ex h3{font-family:"Bebas",sans-serif;letter-spacing:.12em;font-size:22px;color:var(--brasshi);font-weight:400;margin:4px 0}
-.ex p{font-size:14.5px;color:var(--cream)}
-.ledger{margin-top:34px;background:#E9DFC6;color:#1C1810;border:1px solid #B9A77E;padding:22px 26px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.5)}
-.ledger::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0 1px,transparent 1px 3px);pointer-events:none}
-.ledger .mast{font-family:"Limelight",serif;font-size:clamp(26px,4vw,42px);text-align:center;border-bottom:3px double #1C1810;padding-bottom:8px;letter-spacing:.04em}
-.ledger .date{display:flex;justify-content:space-between;font-family:"Bebas",sans-serif;letter-spacing:.16em;font-size:13px;padding:6px 0;border-bottom:1px solid #1C1810}
-.ledger .cols{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:22px;margin-top:14px}
-.ledger h4{font-family:"Limelight",serif;font-weight:400;font-size:20px;line-height:1.15;margin-bottom:6px}
-.ledger p{font-size:14px;line-height:1.45;color:#2A2418}
-@media (max-width:900px){.city .two{grid-template-columns:1fr}.ledger .cols{grid-template-columns:1fr}}
-
-/* lineup */
-.lineup{text-align:center}
-.lineup h2{margin-inline:auto}
-.row{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;max-width:980px;margin:36px auto 0;padding:26px 16px 18px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,17,22,.95),rgba(7,8,10,.95));position:relative}
-.row::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 44px,rgba(201,162,90,.08) 44px 46px);pointer-events:none}
-.sus{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 2px 8px;border:1px solid transparent;transition:transform .2s,border-color .2s}
-.sus:hover{transform:translateY(-4px);border-color:var(--line2)}
-.sus svg{width:100%;max-width:92px;height:auto}
-.sus .who{font-family:"Bebas",sans-serif;letter-spacing:.1em;font-size:13px;color:var(--dim)}
-.row.done .sus[data-fam="1"] .coat{fill:var(--red)}
-.row.done .sus[data-fam="1"] .who{color:#E36B5E}
-.row.done .sus{pointer-events:none}
-.verdict{margin:18px auto 0;max-width:720px;font-size:17px;min-height:52px}
-.verdict b{color:var(--brasshi)}
-.lineup .btn{margin-top:14px}
-@media (max-width:700px){.row{grid-template-columns:repeat(4,1fr)}}
-
-/* roles */
-.roles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:36px}
-.role{border:1px solid var(--line2);background:rgba(14,17,22,.85);padding:18px 16px;position:relative;overflow:hidden}
-.role::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;background:radial-gradient(rgba(240,164,58,.18),transparent 70%)}
-.role h3{font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:24px;color:var(--brasshi);font-weight:400}
-.role .k{font-family:"Bebas",sans-serif;letter-spacing:.16em;font-size:12px;color:var(--brass)}
-.role p{font-size:14.5px;margin-top:6px}
-@media (max-width:900px){.roles{grid-template-columns:1fr 1fr}.role:last-child{grid-column:1/3}}
-
-/* truth */
-.truth .two{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center;margin-top:30px}
-.tl{list-style:none;border-left:2px solid var(--line);padding-left:22px;display:grid;gap:14px}
-.tl li{position:relative;font-size:15.5px}
-.tl li::before{content:"";position:absolute;left:-28px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--ink);border:2px solid var(--brass)}
-.tl li b{color:var(--brasshi)}
-.tl li.red::before{background:var(--red);border-color:var(--red)}
-.truth .frame{aspect-ratio:16/9}
-@media (max-width:900px){.truth .two{grid-template-columns:1fr}}
-
-/* free + playtest */
-.free .grid3{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:14px;margin-top:36px}
-.join{border:1px solid var(--amber);background:linear-gradient(160deg,rgba(240,164,58,.12),rgba(14,17,22,.95) 50%);padding:24px}
-.join h3{font-family:"Limelight",serif;font-weight:400;font-size:28px;color:var(--cream);margin-bottom:8px}
-.join p{font-size:15.5px}
-.join .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;align-items:center}
-.join code{font-family:inherit;color:var(--brasshi);font-weight:700}
-@media (max-width:900px){.free .grid3{grid-template-columns:1fr}}
-
-/* roadmap */
-.road{position:relative;margin-top:60px;display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-.road::before{content:"";position:absolute;left:0;right:0;top:11px;height:2px;background:linear-gradient(90deg,var(--brass),var(--amber) 55%,rgba(201,162,90,.25))}
-.road>div{position:relative;padding-top:34px}
-.road>div::before{content:"";position:absolute;left:0;top:4px;width:16px;height:16px;border-radius:50%;background:var(--ink);border:3px solid var(--brass)}
-.road>div.now::before{background:var(--amber);border-color:var(--amber);box-shadow:0 0 18px rgba(240,164,58,.6)}
-.road h3{font-family:"Bebas",sans-serif;font-weight:400;letter-spacing:.14em;font-size:24px;color:var(--brasshi)}
-.road .when{font-family:"Bebas",sans-serif;letter-spacing:.14em;font-size:15px;color:var(--amber);margin-bottom:6px}
-.road p{font-size:14.5px}
-@media (max-width:900px){.road{grid-template-columns:1fr;gap:24px}.road::before{left:7px;right:auto;top:0;bottom:0;width:2px;height:auto;background:linear-gradient(180deg,var(--brass),rgba(201,162,90,.25))}.road>div{padding:0 0 0 34px}.road>div::before{top:2px}}
-
-/* studio */
-.studio{background:radial-gradient(ellipse at 0% 100%,rgba(240,164,58,.08),transparent 55%)}
-.studio .two{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start;margin-top:30px}
-.studio .frame{aspect-ratio:16/9}
-.studio ul{list-style:none;display:grid;gap:10px;margin-top:16px}
-.studio li{font-size:15.5px;padding-left:22px;position:relative}
-.studio li::before{content:"";position:absolute;left:0;top:12px;width:12px;height:2px;background:var(--brass)}
-@media (max-width:900px){.studio .two{grid-template-columns:1fr}}
-
-/* faq */
-.faq details{border-top:1px solid var(--line2);padding:16px 0}
-.faq details:last-child{border-bottom:1px solid var(--line2)}
-.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;font-family:"Bebas",sans-serif;letter-spacing:.12em;font-size:21px;color:var(--brasshi)}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";color:var(--brass);font-size:24px}
-.faq details[open] summary::after{content:"–"}
-.faq details p{margin-top:10px;font-size:15.5px;max-width:800px}
-.faq .list{margin-top:30px}
-
-/* footer */
-footer{border-top:1px solid var(--line);padding:46px 0 60px;background:#050607}
-footer .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px}
-footer .wm{font-family:"Limelight",serif;font-size:26px;color:var(--cream)}
-footer .wm span{color:var(--brasshi)}
-footer p,footer li{font-size:14px;color:var(--dim)}
-footer ul{list-style:none;display:grid;gap:6px;margin-top:8px}
-footer h4{font-family:"Bebas",sans-serif;letter-spacing:.16em;font-size:16px;color:var(--brass);font-weight:400}
-footer .legal{margin-top:34px;padding-top:18px;border-top:1px solid var(--line2);font-size:12.5px;color:#7A7260;line-height:1.5}
-@media (max-width:900px){footer .grid{grid-template-columns:1fr}}
+/* ---------- motion layer ---------- */
+.js [data-rise]{opacity:0;transform:translateY(26px)}
+.js [data-rise].in{opacity:1;transform:none;transition:opacity .8s ease,transform 1s var(--ease);transition-delay:var(--d,0ms)}
+.js .title .w>span{transform:translateY(105%)}
+.js .title.in .w>span{transform:none;transition:transform 1.1s var(--ease);transition-delay:var(--d,0ms)}
+.js .hero-pic img{animation:settle 2.6s var(--ease) both,drift 38s ease-in-out 2.6s infinite alternate}
+@keyframes settle{from{transform:scale(1.12)}to{transform:scale(1.04)}}
+@keyframes drift{from{transform:scale(1.04) translate3d(0,0,0)}to{transform:scale(1.1) translate3d(-1.2%,-.8%,0)}}
+.js .foot-word span{transform:translateY(40%);opacity:0}
+.js .foot-word.in span{transform:none;opacity:1;transition:transform 1.2s var(--ease),opacity .9s ease;transition-delay:var(--d,0ms)}
+@media (prefers-reduced-motion:reduce){
+  .js [data-rise],.js .title .w>span,.js .foot-word span{opacity:1!important;transform:none!important;transition:none!important}
+  .js .hero-pic img{animation:none;transform:none}
+  .js .frame figure,.js .diff-bg figure,.js .steps p{transition:opacity .2s linear!important}
+  .js .frame figure img,.js .frame figure.on img,.js .diff-bg figure img{transform:none!important;transition:none!important}
+  .btn,.btn .arr{transition:none}
+}
 </style>
 </head>
 <body>
 
-<header class="bar">
-  <a class="wm" href="#top">Dawn <span>Will Tell</span></a>
-  <nav aria-label="Sections"><a href="#pitch">The game</a><a href="#screens">Screens</a><a href="#round">A round</a><a href="#city">Port Sable</a><a href="#roadmap">Roadmap</a><a href="#studio">Studio</a></nav>
-  <a class="btn amber" href="#join">Join the playtest</a>
+<header class="top">
+  <a class="wm" href="#top" aria-label="OXIANA GAMES, back to top">OXIANA GAMES</a>
+  <nav aria-label="Sections"><a href="#night">The night</a><a href="#different">Why it plays different</a><a href="#studio">Studio</a></nav>
+  <a class="btn btn-ink" href="#contact">Contact</a>
 </header>
 
-<section class="hero" id="top">
-  <div class="bg"><img src="img/keyart.jpg" alt="Eight people in 1950s coats stand on a rain-soaked street under neon bar signs" fetchpriority="high"><canvas id="rain" aria-hidden="true"></canvas></div>
-  <div class="wrap">
-    <div class="kick">A first-person social deduction game</div>
-    <h1>Dawn<span>Will Tell</span></h1>
-    <div class="tag-line">Night lies. <i>Dawn tells.</i></div>
-    <p class="lead">Every face in Port Sable is a real player. A hidden family of mobsters hunts the town; the town hunts them back by <b>talking, watching and reading the streets</b>. No NPCs. No phones. <b>The city itself is the witness.</b></p>
-    <div class="cta"><a class="btn amber" href="#join">Join the playtest</a><a class="btn" href="#screens">See it in engine ↓</a></div>
-    <div class="pills"><span class="pill">Free to play</span><span class="pill">PC · Steam first</span><span class="pill">Mobile next</span><span class="pill">4–12 players</span><span class="pill">Proximity voice</span></div>
-    <div class="fine">Pre-alpha · Working title · Key art is concept, everything below is captured in engine</div>
-  </div>
-  <a class="scroll" href="#pitch">Scroll</a>
-</section>
-
-<div class="ticker" aria-hidden="true"><div>
-  <span>No NPCs</span><span>No phones</span><span>No CCTV</span><span>The city remembers</span><span>Proximity voice</span><span>One hidden family</span><span>Four acts a night</span><span>The hanged keep watching</span><span>Free to play</span><span>Port Sable, 1950s</span>
-  <span>No NPCs</span><span>No phones</span><span>No CCTV</span><span>The city remembers</span><span>Proximity voice</span><span>One hidden family</span><span>Four acts a night</span><span>The hanged keep watching</span><span>Free to play</span><span>Port Sable, 1950s</span>
-</div></div>
-
-<section class="pitch" id="pitch">
-  <div class="wrap">
-    <div class="kick rv">The game</div>
-    <h2 class="rv">One town. One hidden family. <em>Until only one side is left.</em></h2>
-    <p class="lead rv">You walk the streets in first person and talk to whoever is close enough to hear. Someone at the table is lying. The city will tell you who, if you know where to look.</p>
-    <div class="grid3">
-      <div class="beat rv"><svg viewBox="0 0 24 24"><path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg><h3>Talk</h3><p>Proximity voice. Whisper in a doorway, shout across the square. Who you stand next to is a choice.</p></div>
-      <div class="beat rv"><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><h3>Watch</h3><p>Who went into the pharmacy at midnight? Who came out with wet shoes? Memory is your only camera.</p></div>
-      <div class="beat rv"><svg viewBox="0 0 24 24"><path d="M7 20c-2-1-3-4-1-7s4-3 5-1 1 6-1 8"/><path d="M14 13c-2-1-2-4 0-6s4-2 5 0 0 6-2 7"/><path d="M6 10l-1-2M13 6l-1-2M17 5l1-2"/></svg><h3>Read the city</h3><p>Footprints on wet stone, a torn ledger page, a newspaper at dawn. The street keeps receipts.</p></div>
-    </div>
-    <div class="facts">
-      <div class="card rv"><div class="num">4–12</div><div class="lab">players per match</div></div>
-      <div class="card rv"><div class="num">~25</div><div class="lab">minutes per match</div></div>
-      <div class="card rv"><div class="num">14</div><div class="lab">fixed faces, roles shuffled every night</div></div>
-      <div class="card rv"><div class="num">0</div><div class="lab">NPCs. Every lie is a human lie</div></div>
+<main>
+<section class="hero" id="top" aria-labelledby="title">
+  <picture class="hero-pic">
+    <source media="(max-width: 700px)" srcset="img/hero-tall-1000.jpg" width="1000" height="1125">
+    <img src="img/hero-2400.jpg" srcset="img/hero-1280.jpg 1280w, img/hero-2400.jpg 2400w" sizes="100vw" width="2400" height="1350" alt="A rain-soaked street at night in Port Sable: a green brick corner building with a jazz club sign, wet cobbles reflecting the lamps" fetchpriority="high">
+  </picture>
+  <p class="pin" data-rise style="--d:900ms"><i></i>In engine, pre-alpha build</p>
+  <h1 class="title" id="title"><span class="w"><span style="--d:80ms">Dawn</span></span> <span class="w"><span style="--d:190ms">Will Tell</span></span></h1>
+  <div class="hero-copy">
+    <p class="lead" data-rise style="--d:520ms">A free-to-play multiplayer social deduction game in a living 1950s harbor city. On PC first; the Steam page opens in early 2027.</p>
+    <div class="hero-act" data-rise style="--d:640ms">
+      <a class="btn btn-accent" href="mailto:oxianagames@gmail.com?subject=Wishlist%3A%20tell%20me%20when%20the%20Steam%20page%20opens&amp;body=Hi%20OXIANA%20GAMES%2C%0A%0APlease%20write%20to%20me%20when%20Dawn%20Will%20Tell%20opens%20its%20Steam%20page.%0A">Wishlist soon <span class="arr" aria-hidden="true">&rarr;</span></a>
     </div>
   </div>
 </section>
 
-<section class="screens" id="screens">
-  <div class="wrap">
-    <div class="kick rv">In engine today</div>
-    <h2 class="rv">Port Sable, as it runs right now. <em>Unedited captures.</em></h2>
-    <p class="lead rv">Pre-alpha. The systems are real; the art is being rebuilt district by district. Click any frame.</p>
-    <div class="shots" id="grid">
-      <div class="frame rv"><button type="button" data-cap="Night phase with HUD · 2:30, the family is awake"><img src="img/hudnight.jpg" alt="Night street with the in-game clock reading 2:30" loading="lazy"><span class="tag">Night · with HUD</span></button></div>
-      <div class="frame rv"><button type="button" data-cap="Day · a harbor street, 1950s cars, people on their rounds"><img src="img/day.jpg" alt="Daylight on a harbor street with 1950s cars and people walking" loading="lazy"><span class="tag">Day</span></button></div>
-      <div class="frame rv"><button type="button" data-cap="Harbour Row · ghosts are visible only to the dead"><img src="img/harbour.jpg" alt="Translucent ghost figures under a Harbour Row sign" loading="lazy"><span class="tag">Ghosts</span></button></div>
-      <div class="frame rv"><button type="button" data-cap="Rain at night · gas lamps on a wet street"><img src="img/rain.jpg" alt="Rainy night street lit by gas lamps, wet asphalt" loading="lazy"><span class="tag">Rain</span></button></div>
-      <div class="frame rv"><button type="button" data-cap="Interior · the pharmacy counter"><img src="img/bar.jpg" alt="A tiled pharmacy interior with a long counter" loading="lazy"><span class="tag">Interior</span></button></div>
-    </div>
+<section class="clock" id="night" aria-labelledby="night-h">
+  <div class="clock-head">
+    <h2 id="night-h" data-rise>Day. Night. Dawn. Trial.</h2>
+    <p class="lead" data-rise style="--d:90ms">By day you talk, walk and lie. By night the killers move. At dawn the town puts someone on trial.</p>
   </div>
-</section>
-<dialog id="light"><img id="light-img" alt=""><div class="cap"><span id="light-cap"></span><button type="button" id="light-close">Close ✕</button></div></dialog>
-
-<section class="round" id="round">
-  <div class="wrap">
-    <div class="kick rv">How a round works</div>
-    <h2 class="rv">One night in Port Sable. <em>Four acts.</em></h2>
-    <div class="clock">
-      <ul class="phases" role="tablist">
-        <li><button class="phase" role="tab" aria-selected="true" data-img="ph-day" data-color="#F0A43A" data-tag="DAY" data-time="14:00" data-kind="In engine · day street"><span class="n">01</span><span><h3>Day</h3><p>Walk, talk, trade rumours, do small jobs. Watch who goes where.</p></span><span class="prog"><i></i></span></button></li>
-        <li><button class="phase" role="tab" aria-selected="false" data-img="ph-night" data-color="#4E8DB5" data-tag="NIGHT" data-time="02:30" data-kind="In engine · lit windows, rain"><span class="n">02</span><span><h3>Night</h3><p>The family acts in the dark. The town hides, guards, follows.</p></span><span class="prog"><i></i></span></button></li>
-        <li><button class="phase" role="tab" aria-selected="false" data-img="ph-dawn" data-color="#ECD09A" data-tag="DAWN" data-time="06:10" data-kind="In engine · wet street, lamps still on"><span class="n">03</span><span><h3>Dawn</h3><p>The city shows what happened: a body, wet tracks, a torn page.</p></span><span class="prog"><i></i></span></button></li>
-        <li><button class="phase" role="tab" aria-selected="false" data-img="ph-trial" data-color="#E36B5E" data-tag="TRIAL" data-time="09:00" data-kind="Concept · the hearing room, target look"><span class="n">04</span><span><h3>Trial</h3><p>Accuse, defend, vote. The hanged stay as ghosts and keep watching.</p></span><span class="prog"><i></i></span></button></li>
-      </ul>
-      <div class="stage rv">
-        <img id="ph-day" class="on" src="img/day.jpg" alt="Daylight on a harbor street, people walking" loading="lazy">
-        <img id="ph-night" src="img/night.jpg" alt="A building front at night, lit windows in the rain" loading="lazy">
-        <img id="ph-dawn" src="img/rain.jpg" alt="A wet empty street before sunrise, gas lamps still on" loading="lazy">
-        <img id="ph-trial" src="img/trial.jpg" alt="Concept art of a dim hearing room, hands raised to vote, one empty chair under the lamp" loading="lazy">
-        <div class="hud"><b id="stage-time">14:00</b><span id="stage-tag">DAY</span></div>
-        <span class="tag kind" id="stage-kind">In engine · day street</span>
+  <div class="clock-scene" id="clock-scene" data-steps="4">
+  <div class="clock-stage">
+    <div class="frame-wrap">
+      <div class="frame" id="frame">
+        <figure class="on">
+          <img src="img/day-1000.jpg" srcset="img/day-1000.jpg 1000w, img/day-2000.jpg 2000w" sizes="(max-width: 700px) 92vw, 94vw" width="2000" height="1125" alt="Jazz Lane in afternoon light, the jazz club sign and parked 1950s cars" loading="lazy">
+          <figcaption><h3>Day <time>14:00</time></h3><p>Walk the city, do your job, talk to anyone close enough to hear.</p><span class="small">Jazz Lane, in engine</span></figcaption>
+        </figure>
+        <figure>
+          <img src="img/night-1000.jpg" srcset="img/night-1000.jpg 1000w, img/night-1920.jpg 1920w" sizes="(max-width: 700px) 92vw, 94vw" width="1920" height="1080" alt="A foggy back alley at night, one warm lamp above a door, crates on wet cobbles" loading="lazy">
+          <figcaption><h3>Night <time>02:30</time></h3><p>The killers move in the dark. Everyone else hides, guards a door or follows a hunch.</p><span class="small">Back alleys, in engine</span></figcaption>
+        </figure>
+        <figure>
+          <img src="img/dawn-1000.jpg" srcset="img/dawn-1000.jpg 1000w, img/dawn-1840.jpg 1840w" sizes="(max-width: 700px) 92vw, 94vw" width="1840" height="1035" alt="A harbor boardwalk at sunrise: the first sun on the upper walls across the water, the street beyond still in cool shade" loading="lazy">
+          <figcaption><h3>Dawn <time>06:10</time></h3><p>The fog lifts and the city shows what happened. Someone did not come home.</p><span class="small">The pier, in engine</span></figcaption>
+        </figure>
+        <figure>
+          <img src="img/trial-1000.jpg" srcset="img/trial-1000.jpg 1000w, img/trial-2000.jpg 2000w" sizes="(max-width: 700px) 92vw, 94vw" width="2000" height="967" alt="The courthouse on the square in low sun, its columns and arched windows" loading="lazy">
+          <figcaption><h3>Trial <time>09:00</time></h3><p>Accuse, defend, vote. The town sends one player to the gallows and lives with it.</p><span class="small">Court Square, in engine</span></figcaption>
+        </figure>
       </div>
     </div>
+    <div class="clock-foot">
+      <p class="now-line" id="now-line">One round runs through all four hours. Pick an hour to see the city then.</p>
+      <ol class="hours" id="hours" aria-label="Hours of a round">
+        <li><button type="button" data-i="0" aria-current="true">Day <span class="tag" hidden>now</span></button></li>
+        <li><button type="button" data-i="1">Night <span class="tag" hidden>now</span></button></li>
+        <li><button type="button" data-i="2">Dawn <span class="tag" hidden>now</span></button></li>
+        <li><button type="button" data-i="3">Trial <span class="tag" hidden>now</span></button></li>
+      </ol>
+    </div>
+  </div>
   </div>
 </section>
 
-<section class="city" id="city">
-  <div class="wrap">
-    <div class="kick rv">Port Sable</div>
-    <h2 class="rv">Nobody saw anything. <em>The street did.</em></h2>
-    <p class="lead rv">A rain-soaked 1950s harbor city: docks, a jazz club, a pharmacy that closes late, alleys that remember. Other deduction games ask you to read people. Ours lets you read the city.</p>
-    <div class="two">
-      <div class="frame rv"><img src="img/district.jpg" alt="Concept art of a rainy 1950s district at night" loading="lazy"><span class="tag">Concept · target look</span></div>
-      <div class="exhibits">
-        <div class="ex rv"><div class="lab">Exhibit A</div><h3>Footprints</h3><p>Tracks hold on wet stone, then wash out. Dawn is a deadline.</p></div>
-        <div class="ex rv"><div class="lab">Exhibit B</div><h3>The ledger</h3><p>Who signed for the night shift. Who tore the page.</p></div>
-        <div class="ex rv"><div class="lab">Exhibit C</div><h3>Coats and hats</h3><p>Change the coat, pull the brim down. A face in the crowd becomes a guess.</p></div>
-        <div class="ex rv"><div class="lab">Exhibit D</div><h3>The morning paper</h3><p>Every dawn the city prints what it saw. Not what it knows.</p></div>
+<section class="diff" id="different" aria-labelledby="diff-h">
+  <div class="diff-head"><h2 id="diff-h" data-rise>Why it plays different</h2></div>
+  <div class="diff-scene" id="diff-scene" data-steps="3">
+  <div class="diff-stage">
+    <div class="diff-copy">
+      <ol class="steps" id="steps">
+        <li class="on"><h3>Every face is a player.</h3><p>There are no NPCs. The barber, the docker, the woman under the lamp: each one is a real person, and some of them are lying.</p></li>
+        <li><h3>The dead walk on.</h3><p>Killed players stay in the city as ghosts. They see the rest of the night play out and wait for the truth at dawn.</p></li>
+        <li><h3>The secrets stay on the server.</h3><p>A dedicated server holds every role and decides every outcome. Each player's machine gets only what that player may know, so no one can read another player's role from their own game.</p></li>
+      </ol>
+    </div>
+    <div class="diff-bg">
+      <figure class="on"><img src="img/keyart-1000.jpg" srcset="img/keyart-1000.jpg 1000w, img/keyart-1920.jpg 1920w" sizes="100vw" width="1920" height="1072" alt="Key art: eight people of Port Sable in 1950s clothes stand on a wet street under neon signs" loading="lazy"><figcaption class="cap">Key art, not a game capture</figcaption></figure>
+      <figure><img src="img/ghosts-900.jpg" srcset="img/ghosts-900.jpg 900w, img/ghosts-1400.jpg 1400w" sizes="100vw" width="1400" height="788" alt="Two translucent blue ghosts on a foggy harbor walk under a lit Harbour Row sign" loading="lazy"><figcaption class="cap">Ghosts on Harbour Row, in engine</figcaption></figure>
+      <figure><img src="img/station-1000.jpg" srcset="img/station-1000.jpg 1000w, img/station-2000.jpg 2000w" sizes="100vw" width="2000" height="1125" alt="The station forecourt at night in heavy rain: wet pavement under street lamps, parked cars and lit signs across the road" loading="lazy"><figcaption class="cap">The station forecourt, in engine</figcaption></figure>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="studio" id="studio" aria-labelledby="studio-h">
+  <div class="studio-head">
+    <h2 id="studio-h" data-rise>Made in Termiz</h2>
+    <p class="lead" data-rise style="--d:90ms">OXIANA GAMES is an independent studio in Termiz, Uzbekistan, on the Amu Darya, the river the ancient world called the Oxus. Dawn Will Tell is our first game.</p>
+  </div>
+  <div class="mosaic">
+    <figure class="m-photo" data-rise style="--d:160ms">
+      <img src="img/quay-1000.jpg" srcset="img/quay-1000.jpg 1000w, img/quay-1920.jpg 1920w" sizes="(max-width: 900px) 100vw, 66vw" width="1920" height="1080" alt="A cobbled quay at night, a cast-iron lamp and a railing above dark water" loading="lazy">
+      <figcaption class="cap">The quay, in engine</figcaption>
+      <p class="note"><b>In production now.</b> Pre-alpha, with playable online builds. Built in Unreal Engine 5 on dedicated servers. PC on Steam first, mobile after.</p>
+    </figure>
+    <div class="m-side">
+      <div class="m-tile" data-rise style="--d:240ms">
+        <svg viewBox="0 0 400 360" role="img" aria-label="A drawing of the Amu Darya river with Termiz marked on its north bank">
+          <path d="M-20 70 C 60 60, 90 120, 150 130 S 250 110, 290 170 S 330 280, 420 300 L 420 336 C 320 318, 300 214, 262 190 S 160 168, 140 166 S 40 108, -20 106 Z" fill="#4E8DB5" opacity=".55"/>
+          <path d="M-20 86 C 60 80, 96 140, 150 148 S 256 132, 280 182 S 330 300, 420 318" fill="none" stroke="#EFE6D2" stroke-width="2.5" stroke-linecap="round" opacity=".85"/>
+          <circle cx="214" cy="128" r="9" fill="#F0A43A"/>
+          <text x="232" y="122" fill="#EFE6D2" font-family="Archivo, sans-serif" font-size="22" font-weight="700">Termiz</text>
+          <text x="40" y="250" fill="#EFE6D2" font-family="Archivo, sans-serif" font-size="16" font-weight="500" opacity=".86">Amu Darya</text>
+        </svg>
+        <span class="lbl">37.2° N, 67.3° E</span>
       </div>
-    </div>
-    <div class="ledger rv" aria-label="The Port Sable Ledger, a newspaper mock-up">
-      <div class="mast">The Port Sable Ledger</div>
-      <div class="date"><span>Dawn edition</span><span>Price: one honest answer</span><span>Harbour Row</span></div>
-      <div class="cols">
-        <div><h4>Body found on Harbour Row; pharmacist "saw nothing"</h4><p>Wet tracks lead from the kerb to the back door. By the time the paper is read, the rain has had its say.</p></div>
-        <div><h4>Night porter changes coats twice in one evening</h4><p>Witnesses disagree on the colour. Witnesses disagree on the porter.</p></div>
-        <div><h4>Trial at nine. Bring your alibi.</h4><p>The town votes at the square. The hanged, as always, will be watching from the railings.</p></div>
-      </div>
+      <dl class="facts" data-rise style="--d:320ms">
+        <div><dt>Studio</dt><dd>OXIANA GAMES LLC (MChJ), in registration</dd></div>
+        <div><dt>City</dt><dd>Termiz, Uzbekistan</dd></div>
+        <div><dt>Time in Termiz</dt><dd id="termiz-time">UTC+5</dd></div>
+        <div><dt>2026</dt><dd>Selected for Firstpoint Boost Central Asia</dd></div>
+      </dl>
     </div>
   </div>
 </section>
 
-<section class="lineup" id="lineup">
-  <div class="wrap">
-    <div class="kick rv" style="justify-content:center">Try it</div>
-    <h2 class="rv">Eight coats. Two of them are the Family. <em>Pick one.</em></h2>
-    <div class="row rv" id="row"></div>
-    <p class="verdict" id="verdict">Click a coat to accuse.</p>
-    <button class="btn" id="again" type="button" hidden>Deal again</button>
+<section class="contact" id="contact" aria-labelledby="contact-h">
+  <figure class="contact-pic">
+    <img src="img/warehouse-1000.jpg" srcset="img/warehouse-1000.jpg 1000w, img/warehouse-1920.jpg 1920w" sizes="100vw" width="1920" height="1080" alt="A brick warehouse at night, a gas lamp and oil drums along the kerb, fog behind" loading="lazy">
+    <figcaption class="cap">Warehouse row, in engine</figcaption>
+  </figure>
+  <div class="card" data-rise>
+    <h2 id="contact-h">Write to us</h2>
+    <p class="intro">Press, publishers, investors and playtesters. One inbox, answered by hand.</p>
+    <a class="mail" href="mailto:oxianagames@gmail.com">oxianagames@gmail.com</a>
+    <dl class="sheet">
+      <dt>Game</dt><dd>Dawn Will Tell</dd>
+      <dt>Genre</dt><dd>Multiplayer social deduction</dd>
+      <dt>Price</dt><dd>Free to play</dd>
+      <dt>Platform</dt><dd>PC (Steam) first, mobile later</dd>
+      <dt>Stage</dt><dd>Pre-alpha, playable online</dd>
+      <dt>Steam page</dt><dd>Early 2027</dd>
+      <dt>Engine</dt><dd>Unreal Engine 5</dd>
+    </dl>
+    <a class="btn btn-accent" href="mailto:oxianagames@gmail.com?subject=Dawn%20Will%20Tell">Email the studio <span class="arr" aria-hidden="true">&rarr;</span></a>
   </div>
 </section>
+</main>
 
-<section class="cast" id="cast">
-  <div class="wrap">
-    <div class="kick rv">Roles</div>
-    <h2 class="rv">Same faces every night. <em>Never the same hand.</em></h2>
-    <p class="lead rv">Fourteen fixed characters live in Port Sable. Roles are shuffled every match, so the barber you trusted yesterday may be the one holding the knife tonight.</p>
-    <div class="roles">
-      <div class="role rv"><div class="k">Hidden</div><h3>The Family</h3><p>Know each other. Act at night. Win when the town can no longer outvote them.</p></div>
-      <div class="role rv"><div class="k">Town</div><h3>Detective</h3><p>Follows, checks, remembers. Right once, and the family is on a clock.</p></div>
-      <div class="role rv"><div class="k">Town</div><h3>Doctor</h3><p>Guards one person a night. Guess who the family wants, and nobody dies.</p></div>
-      <div class="role rv"><div class="k">Town</div><h3>Citizens</h3><p>The majority, with only their eyes and their vote. Talk, or lose.</p></div>
-      <div class="role rv"><div class="k">After</div><h3>Ghosts</h3><p>The dead stay in the city, see what the living cannot, and say nothing.</p></div>
-    </div>
+<footer class="foot">
+  <div class="foot-cols">
+    <div><h3>OXIANA GAMES</h3><p>LLC (MChJ), in registration<br>Termiz, Uzbekistan</p></div>
+    <div><h3>Contact</h3><ul><li><a href="mailto:oxianagames@gmail.com">oxianagames@gmail.com</a></li><li>Press kit on request</li></ul></div>
+    <div><h3>Dawn Will Tell</h3><ul><li><a href="#night">The night</a></li><li><a href="#different">Why it plays different</a></li><li><a href="#studio">Studio</a></li></ul></div>
+    <div><h3>Status</h3><p>Pre-alpha, in production<br>Firstpoint Boost Central Asia 2026</p></div>
   </div>
-</section>
-
-<section class="truth" id="truth">
-  <div class="wrap">
-    <div class="kick rv">When it's over</div>
-    <h2 class="rv">The city shows its hand. <em>The Truth.</em></h2>
-    <div class="two">
-      <ul class="tl rv">
-        <li><b>Night 1, 02:14</b> · the barber leaves the jazz club by the back door.</li>
-        <li class="red"><b>Night 1, 02:31</b> · the docker dies on Harbour Row. Two sets of tracks.</li>
-        <li><b>Day 2</b> · the pharmacist swears she saw a grey coat. It was brown.</li>
-        <li><b>Trial 2</b> · the town hangs the typist. The typist was town.</li>
-        <li><b>Dawn 3</b> · the detective's note, never read: "the barber".</li>
-      </ul>
-      <div class="frame rv"><img src="img/truth.jpg" alt="The in-game Truth screen listing who did what and when" loading="lazy"><span class="tag">In engine · Truth screen</span></div>
-    </div>
-    <p class="lead rv" style="margin-top:26px">Every match ends with the full replay: who did what, when, and who almost caught them. The server holds every secret until then; nothing hidden ever reaches a player's machine early.</p>
-  </div>
-</section>
-
-<section class="free" id="join">
-  <div class="wrap">
-    <div class="kick rv">Free to play</div>
-    <h2 class="rv">Dress the part. <em>It won't save you.</em></h2>
-    <div class="grid3">
-      <div class="card rv"><h3>Free, forever</h3><p>Every role, every rule, every district, every match. Nothing in the game is gated.</p></div>
-      <div class="card rv"><h3>Paid: looks only</h3><p>Coats, hats, emotes, city themes. Seen by everyone at the table, useless at the trial. No pay-to-win, ever.</p></div>
-      <div class="join rv">
-        <h3>Join the first playtests</h3>
-        <p>Closed playtests on PC start in November 2026, friends of friends first. Send us your name, your time zone and how many people you bring.</p>
-        <div class="cta"><a class="btn amber" href="mailto:oxianagames@gmail.com?subject=Playtest%20sign-up&body=Name%3A%0ATime%20zone%3A%0AHow%20many%20friends%3A%0A">Email the studio</a><button class="btn" type="button" id="copy" data-mail="oxianagames@gmail.com">Copy address</button></div>
-        <p style="margin-top:10px;font-size:13.5px;color:var(--dim)">No list, no tracking. We reply by hand and delete your mail when the playtest is over.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="roadmap" id="roadmap">
-  <div class="wrap">
-    <div class="kick rv">Roadmap</div>
-    <h2 class="rv">Targets, not promises. <em>Dates move with playtests.</em></h2>
-    <div class="road">
-      <div class="now rv"><div class="when">Now – Nov 2026</div><h3>Playtests</h3><p>Friends playtests, art rebuild, rules freeze.</p></div>
-      <div class="rv"><div class="when">Nov 2026</div><h3>Steam page</h3><p>Trailer cut from real matches, wishlists, closed sign-up.</p></div>
-      <div class="rv"><div class="when">Dec 2026</div><h3>Closed beta</h3><p>Invited players and streamers, first Truth clips.</p></div>
-      <div class="rv"><div class="when">Target · early 2027</div><h3>Launch</h3><p>Free to play on Steam. Date not announced yet.</p></div>
-      <div class="rv"><div class="when">2027</div><h3>Mobile</h3><p>iOS and Android, shared accounts and cosmetics.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="studio" id="studio">
-  <div class="wrap">
-    <div class="kick rv">Studio</div>
-    <h2 class="rv">Made in Tashkent.<br>We build the city. <em>You bring the lies.</em></h2>
-    <div class="two">
-      <div>
-        <p class="lead rv">OXIANA GAMES is a small studio in Tashkent, Uzbekistan, building Dawn Will Tell in Unreal Engine 5 with a production line of AI coding agents and human direction: people decide the design, automation builds, tests and reviews every change before it lands.</p>
-        <ul class="rv">
-          <li><b>Three weeks</b> from first commit to a live dedicated server and a playable loop.</li>
-          <li><b>3,000+ automated specs</b> gate every change. Rules are frozen between playtests.</li>
-          <li><b>Phone-safe from day one</b>: server-authoritative rules, scalable rendering. Mobile is a port, not a rewrite.</li>
-        </ul>
-      </div>
-      <div class="frame rv"><img src="img/deskroom.jpg" alt="Concept art of a detective's desk under a green lamp, harbor cranes in the window" loading="lazy"><span class="tag">Concept · the studio's mood board</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="faq" id="faq">
-  <div class="wrap">
-    <div class="kick rv">Before you accuse anybody</div>
-    <h2 class="rv">Questions.</h2>
-    <div class="list rv">
-      <details><summary>Is it really free?</summary><p>Yes. Every role, map and rule is free. Paid items are cosmetics only and never change the odds.</p></details>
-      <details><summary>What do I need to play?</summary><p>A Windows PC, a microphone and friends. Steam first; mobile comes after launch with shared accounts.</p></details>
-      <details><summary>How many players?</summary><p>4 to 12 in one match, about 25 minutes. Bots fill in only when somebody leaves.</p></details>
-      <details><summary>When does it come out?</summary><p>The target is early 2027 on Steam, free to play. There is no official date yet; playtesters hear first.</p></details>
-      <details><summary>Is there an age rating?</summary><p>Not yet rated. The game is written for players 16 and up: a 1950s crime city, no gore, no real-world brands or people.</p></details>
-      <details><summary>Can I stream it?</summary><p>Please do, from the first playtest on. Every match ends with the Truth replay, made for exactly that.</p></details>
-      <details><summary>What happens to my email?</summary><p>We read it, reply, and delete it when the playtest is over. This site sets no cookies and runs no analytics.</p></details>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="grid">
-      <div><div class="wm">Dawn <span>Will Tell</span></div><p style="margin-top:8px">A first-person social deduction game in a 1950s noir harbor city. Free to play on PC, mobile next.</p><p style="margin-top:8px"><a href="mailto:oxianagames@gmail.com">oxianagames@gmail.com</a></p></div>
-      <div><h4>OXIANA GAMES</h4><ul><li>Tashkent, Uzbekistan</li><li>Company registration in progress</li><li>Press kit: on request by email</li></ul></div>
-      <div><h4>Site</h4><ul><li><a href="#pitch">The game</a></li><li><a href="#screens">Screens</a></li><li><a href="#join">Join the playtest</a></li><li><a href="#faq">Questions</a></li></ul></div>
-    </div>
-    <div class="legal">© 2026 OXIANA GAMES. "Dawn Will Tell" is a working title; a trademark search is in progress. Not yet rated; intended for players 16+. All screenshots are from the current pre-alpha build unless marked concept. This site sets no cookies, uses no analytics and collects no data; email is answered by hand. Unreal Engine is a trademark of Epic Games, Inc.</div>
+  <div></div>
+  <div>
+    <p class="foot-word" aria-hidden="true"><span style="--d:0ms">Oxiana</span> <span style="--d:120ms">Games</span></p>
+    <p class="legal">&copy; 2026 OXIANA GAMES. Pictures are captured in engine from the pre-alpha build unless marked key art; everything may still change. &ldquo;Dawn Will Tell&rdquo; is a working title while the trademark search runs. Unreal Engine is a trademark of Epic Games, Inc. This site sets no cookies and runs no analytics.</p>
   </div>
 </footer>
 
 <script>
-(function(){
+(function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasIO = 'IntersectionObserver' in window;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
-  /* reveal on scroll */
-  var rv = document.querySelectorAll('.rv');
-  if ('IntersectionObserver' in window && !reduce) {
-    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
-    rv.forEach(function(el){ io.observe(el); });
-    /* safety net: a background tab or a jump link must never leave a section blank */
-    setTimeout(function(){ rv.forEach(function(el){ var r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.add('in'); }); }, 1200);
-    window.addEventListener('hashchange', function(){ setTimeout(function(){ rv.forEach(function(el){ var r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.add('in'); }); }, 350); });
-  } else { rv.forEach(function(el){ el.classList.add('in'); }); }
+  /* entrances: once, in reading order; a safety net never leaves a part hidden */
+  var risers = $$('[data-rise], .title, .foot-word');
+  function showInView() { risers.forEach(function (el) { var r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.add('in'); }); }
+  if (hasIO && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    risers.forEach(function (el) { io.observe(el); });
+    /* the first screen never waits for the observer */
+    setTimeout(function () { $$('.hero [data-rise], .title').forEach(function (el) { el.classList.add('in'); io.unobserve(el); }); }, 60);
+    setTimeout(showInView, 1600);
+    addEventListener('hashchange', function () { setTimeout(showInView, 300); });
+  } else { risers.forEach(function (el) { el.classList.add('in'); }); }
 
-  /* rain on the hero */
-  var c = document.getElementById('rain');
-  if (c && c.getContext && !reduce) {
-    var ctx = c.getContext('2d'), drops = [], W = 0, H = 0;
-    function mk(any){ return { x: Math.random() * W, y: any ? Math.random() * H : -20, l: 10 + Math.random() * 18, s: 9 + Math.random() * 7, a: .12 + Math.random() * .25 }; }
-    function size(){ W = c.width = c.clientWidth; H = c.height = c.clientHeight; drops = []; for (var i = 0; i < Math.min(240, W / 6); i++) drops.push(mk(true)); }
-    function tick(){
-      ctx.clearRect(0, 0, W, H); ctx.strokeStyle = 'rgba(200,220,235,1)'; ctx.lineWidth = 1;
-      for (var i = 0; i < drops.length; i++) { var d = drops[i]; ctx.globalAlpha = d.a; ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 1.2, d.y + d.l); ctx.stroke(); d.y += d.s; d.x -= .4; if (d.y > H) drops[i] = mk(false); }
-      ctx.globalAlpha = 1; requestAnimationFrame(tick);
+  /* a pinned scene: the scroll position inside it decides which step is lit */
+  function scene(root, onStep) {
+    var n = +root.getAttribute('data-steps') || 1, cur = -1;
+    function set(i) { if (i === cur) return; cur = i; onStep(i); }
+    function measure() {
+      var top = root.getBoundingClientRect().top, h = root.offsetHeight - innerHeight;
+      if (h <= 0) return set(0);
+      var p = Math.min(Math.max(-top / h, 0), 0.9999);
+      set(Math.floor(p * n));
     }
-    size(); window.addEventListener('resize', size); tick();
+    addEventListener('scroll', measure, { passive: true });
+    addEventListener('resize', measure);
+    measure();
+    return function (i) {
+      var h = root.offsetHeight - innerHeight;
+      var y = root.getBoundingClientRect().top + scrollY + h * (i + 0.5) / n;
+      scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+    };
   }
 
-  /* match clock */
-  var phases = Array.prototype.slice.call(document.querySelectorAll('.phase'));
-  var stageTag = document.getElementById('stage-tag'), stageTime = document.getElementById('stage-time'), stageKind = document.getElementById('stage-kind');
-  var idx = 0, timer = null;
-  function show(i){
-    idx = i;
-    phases.forEach(function(p, j){
-      var on = j === i; p.setAttribute('aria-selected', on ? 'true' : 'false');
-      var img = document.getElementById(p.getAttribute('data-img')); if (img) img.classList.toggle('on', on);
-      var bar = p.querySelector('.prog i'); if (bar) { bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = ''; }
-    });
-    var p = phases[i];
-    document.documentElement.style.setProperty('--phase', p.getAttribute('data-color'));
-    stageTag.textContent = p.getAttribute('data-tag'); stageTime.textContent = p.getAttribute('data-time');
-    if (stageKind) stageKind.textContent = p.getAttribute('data-kind');
-  }
-  phases.forEach(function(p, i){ p.addEventListener('click', function(){ show(i); if (timer) { clearInterval(timer); timer = null; } }); });
-  if (!reduce) timer = setInterval(function(){ show((idx + 1) % phases.length); }, 6000);
-
-  /* gallery lightbox */
-  var dlg = document.getElementById('light'), li = document.getElementById('light-img'), lc = document.getElementById('light-cap');
-  function closeDlg(){ if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
-  document.querySelectorAll('#grid button').forEach(function(b){
-    b.addEventListener('click', function(){
-      var img = b.querySelector('img'); li.src = img.src; li.alt = img.alt; lc.textContent = b.getAttribute('data-cap');
-      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
-    });
+  /* the clock: four hours of one round; the visitor's own hour is marked */
+  var frame = $('#frame'), figs = $$('#frame figure'), hourBtns = $$('#hours button');
+  var go = scene($('#clock-scene'), function (i) {
+    figs.forEach(function (f, j) { f.classList.toggle('on', j === i); });
+    hourBtns.forEach(function (b, j) { b.setAttribute('aria-current', j === i ? 'true' : 'false'); });
   });
-  document.getElementById('light-close').addEventListener('click', closeDlg);
-  dlg.addEventListener('click', function(e){ if (e.target === dlg) closeDlg(); });
+  hourBtns.forEach(function (b) { b.addEventListener('click', function () { go(+b.getAttribute('data-i')); }); });
 
-  /* lineup game */
-  var row = document.getElementById('row'), verdict = document.getElementById('verdict'), again = document.getElementById('again');
-  var names = ['the docker', 'the pharmacist', 'the clerk', 'the switchboard girl', 'the barber', 'the night porter', 'the fishmonger', 'the typist'];
-  var fam = [];
-  function fig(h, tilt){
-    return '<svg viewBox="0 0 100 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-      '<rect x="38" y="150" width="10" height="46" fill="#15181e"/><rect x="52" y="150" width="10" height="46" fill="#15181e"/>' +
-      '<path class="coat" d="M30 ' + (78 + h) + ' L70 ' + (78 + h) + ' L82 158 L18 158 Z" fill="#23262d"/>' +
-      '<path d="M50 ' + (78 + h) + ' L44 158 L56 158 Z" fill="rgba(0,0,0,.4)"/>' +
-      '<circle cx="50" cy="' + (62 + h) + '" r="13" fill="#1b1e24"/>' +
-      '<g transform="rotate(' + tilt + ' 50 ' + (50 + h) + ')"><path d="M36 ' + (54 + h) + ' L64 ' + (54 + h) + ' L62 ' + (36 + h) + ' L38 ' + (36 + h) + ' Z" fill="#15181e"/><path d="M24 ' + (56 + h) + ' L76 ' + (56 + h) + ' L72 ' + (61 + h) + ' L28 ' + (61 + h) + ' Z" fill="#15181e"/></g></svg>';
+  var names = ['day', 'night', 'dawn', 'trial'];
+  var says = [
+    'the day: people are talking, walking and lying.',
+    'the night: the killers are moving.',
+    'dawn: the city is about to show what happened.',
+    'the trial: the town is voting on the square.'
+  ];
+  function phaseOf(h) { return h >= 5 && h < 8 ? 2 : h >= 8 && h < 11 ? 3 : h >= 11 && h < 19 ? 0 : 1; }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function tickClock() {
+    var d = new Date(), p = phaseOf(d.getHours());
+    $('#now-line').innerHTML = 'It is <b>' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + '</b> where you are. In Port Sable that is ' + says[p];
+    hourBtns.forEach(function (b, j) { var t = $('.tag', b); if (t) t.hidden = j !== p; });
+    try {
+      $('#termiz-time').textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tashkent' }).format(d) + ' (UTC+5)';
+    } catch (e) {}
   }
-  function deal(){
-    fam = []; while (fam.length < 2) { var r = Math.floor(Math.random() * 8); if (fam.indexOf(r) < 0) fam.push(r); }
-    row.classList.remove('done'); row.innerHTML = ''; again.hidden = true; verdict.innerHTML = 'Click a coat to accuse.';
-    var order = names.slice().sort(function(){ return Math.random() - .5; });
-    for (var i = 0; i < 8; i++) {
-      var b = document.createElement('button'); b.className = 'sus'; b.type = 'button';
-      b.setAttribute('data-fam', fam.indexOf(i) >= 0 ? '1' : '0'); b.setAttribute('aria-label', 'Accuse ' + order[i]);
-      b.innerHTML = fig(Math.round(Math.random() * 10 - 5), Math.round(Math.random() * 10 - 5)) + '<span class="who">' + order[i] + '</span>';
-      (function(b, i){ b.addEventListener('click', function(){ accuse(b, i); }); })(b, i);
-      row.appendChild(b);
-    }
-  }
-  function accuse(b, i){
-    if (row.classList.contains('done')) return;
-    row.classList.add('done'); again.hidden = false;
-    var who = b.querySelector('.who').textContent;
-    if (fam.indexOf(i) >= 0) verdict.innerHTML = 'You hanged <b>' + who + '</b>. Family. <b>Lucky.</b> One more coat to find, and now they know you can guess.';
-    else verdict.innerHTML = 'You hanged <b>' + who + '</b>. Town. The Family smiles. <b>This is why you talk first.</b>';
-  }
-  again.addEventListener('click', deal);
-  deal();
+  tickClock(); setInterval(tickClock, 30000);
 
-  /* copy address */
-  var cp = document.getElementById('copy');
-  cp.addEventListener('click', function(){
-    var m = cp.getAttribute('data-mail');
-    function done(){ var t = cp.textContent; cp.textContent = 'Copied'; setTimeout(function(){ cp.textContent = t; }, 1600); }
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(m).then(done, function(){ window.prompt('Copy the address:', m); });
-    else window.prompt('Copy the address:', m);
+  /* why it plays different: the lit statement steps with the scroll */
+  var steps = $$('#steps li'), bgs = $$('.diff-bg figure');
+  scene($('#diff-scene'), function (i) {
+    steps.forEach(function (s, j) { s.classList.toggle('on', j === i); });
+    bgs.forEach(function (f, j) { f.classList.toggle('on', j === i); });
+  });
+
+  /* the hero picture rests while the tab is hidden */
+  document.addEventListener('visibilitychange', function () {
+    var img = $('.hero-pic img'); if (img) img.style.animationPlayState = document.hidden ? 'paused' : 'running';
   });
 })();
 </script>
